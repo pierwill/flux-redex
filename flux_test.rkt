@@ -18,4 +18,11 @@
   (redex-match Flux assignment
                (term
                 (foo "=" 1)))
+
+  (redex-match Flux functionLit
+               (term (
+                      "()"
+                      "=>"
+                      1
+                      )))
   )
