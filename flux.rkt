@@ -119,7 +119,18 @@
   (datetimeLit (date "T" time))
 
   ;; TODO
-  ;; (recordLit)
+  ;; RecordLiteral  = "{" RecordBody "}" .
+  (recordLit ("{" recordBody "}"))
+  ;; RecordBody     = WithProperties | PropertyList .
+  (recordBody withProperties propertyList)
+  ;; WithProperties = identifier "with" PropertyList .
+  (withProperties (identifier "with" propertyList))
+  ;; PropertyList   = [ Property { "," Property } ] .
+  (propertyList (property ...))
+  ;; Property       = identifier [ ":" Expression ]
+  ;;                | string_lit ":" Expression .
+  (property (identifier ":" expression)
+            (stringLit ":" expression))
 
   ;; TODO
   ;; ArrayLiteral   = "[" ExpressionList "]" .
