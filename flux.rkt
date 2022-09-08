@@ -61,9 +61,15 @@
              returnStatement
              expressionStatement)
 
-  (expressionStatement expression)
+  ;; (optionAssignment)
+
+  ;; (builtinStatement)
+
+  (variableAssignment (identifier "=" expression))
 
   (returnStatement ("return" expression))
+
+  (expressionStatement expression)
 
   (expression identifier
               literal
@@ -153,8 +159,6 @@
            "or"
            "package"
            "builtin")
-
-  (assignment (identifier "=" expression))
 
   ;; identifier (letter { letter | unicode_digit } .
   ;; (identifier (letter (letter )
