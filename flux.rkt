@@ -100,6 +100,7 @@
   ;; (regexLit)
 
   (durationLit (intLit durationUnit))
+  (durationUnit "y" "mo" "w" "d" "h" "m" "s" "ms" "us" "μs" "ns")
 
   ;; date_time_lit     = date [ "T" time ] .
   (datetimeLit (date "T" time))
@@ -134,19 +135,6 @@
   ;; FunctionBody       = Expression | Block .
   (functionBody expression)
 
-  (durationUnit
-   "y"
-   "mo"
-   "w"
-   "d"
-   "h"
-   "m"
-   "s"
-   "ms"
-   "us"
-   "μs"
-   "ns"
-   )
 
   ;; date              = year "-" month "-" day .
   (date (year "-" month "-" day))
@@ -169,48 +157,13 @@
   ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
   ;; (timeOffset ())
 
-  (keyword "and"
-           "import"
-           "not"
-           "return"
-           "option"
-           "test"
-           "empty"
-           "in"
-           "or"
-           "package"
-           "builtin")
+  (keyword "and" "import" "not" "return" "option" "test" "empty" "in" "or" "package" "builtin")
 
   ;; identifier (letter { letter | unicode_digit } .
   ;; (identifier (letter (letter )
 
   (operators
-   "+"
-   "=="
-   "!="
-   "("
-   ")"
-   "=>"
-   "-"
-   "<"
-   "!~"
-   "["
-   "]"
-   "^"
-   "*"
-   ">"
-   "=~"
-   "{"
-   "}"
-   "/"
-   "<="
-   "="
-   ","
-   ":"
-   "%"
-   ">="
-   "<-"
-   "."
-   "|>"
-   )
+   "+" "==" "!=" "(" ")" "=>" "-" "<" "!~" "[" "]" "^"
+   "*" ">" "=~" "{" "}" "/" "<=" "=" "," ":" "%" ">=" "<-" "." "|>" )
+
   )
