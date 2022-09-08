@@ -76,7 +76,11 @@
                      literal
                      ("(" expression ")"))
 
+  ;; identifier (letter { letter | unicode_digit } .
+  ;; (identifier (letter (letter ))
   (identifier variable-not-otherwise-mentioned)
+
+  (digit "0" "1" "2" "3" "4" "5" "6" "7" "8" "9")
 
   (literal intLit
            floatLit
@@ -158,9 +162,6 @@
 
   (keyword "and" "import" "not" "return" "option" "test" "empty" "in" "or" "package" "builtin")
 
-  ;; identifier (letter { letter | unicode_digit } .
-  ;; (identifier (letter (letter ))
-
   (operators
    "+" "==" "!=" "(" ")" "=>" "-" "<" "!~" "[" "]" "^"
    "*" ">" "=~" "{" "}" "/" "<=" "=" "," ":" "%" ">=" "<-" "." "|>" )
@@ -168,61 +169,56 @@
   ;; Operator precedence
   ;; -------------------
 
-  ;; Expression               = ConditionalExpression .
   (expression ConditionalExpression)
-  ;; ConditionalExpression    = LogicalExpression
-  ;;                           | "if" Expression "then" Expression "else" Expression .
-  (ConditionalExpression ("if" expression "then" expression "else" expression))
-  ;; LogicalExpression        = UnaryLogicalExpression
-  ;;                           | LogicalExpression LogicalOperator UnaryLogicalExpression .
+
+  (ConditionalExpression LogicalExpression
+                         ("if" expression "then" expression "else" expression))
+
   (LogicalExpression UnaryLogicalExpression
                      (LogicalExpression LogicalOperator UnaryLogicalExpression))
-  ;; LogicalOperator          = "and" | "or" .
-  (logicalOperator "and" "or")
-  ;; UnaryLogicalExpression   = ComparisonExpression
-  ;;                           | UnaryLogicalOperator UnaryLogicalExpression .
-  (UnaryLogicalExpression Comparisonexpression
+
+  (LogicalOperator "and" "or")
+
+  (UnaryLogicalExpression ComparisonExpression
                           (UnaryLogicalOperator UnaryLogicalExpression))
-  ;; UnaryLogicalOperator     = "not" | "exists" .
+
   (UnaryLogicalOperator "not" "exists")
-  ;; ComparisonExpression     = MultiplicativeExpression
-  ;;                           | ComparisonExpression ComparisonOperator MultiplicativeExpression .
+
   (ComparisonExpression MultiplicativeExpression
                         (ComparisonExpression ComparisonOperator MultiplicativeExpression))
-  ;; ComparisonOperator       = "==" | "!=" | "<" | "<=" | ">" | ">=" | "=~" | "!~" .
-  ;; (comparisonOperator)
-  ;; ;; AdditiveExpression       = MultiplicativeExpression
-  ;; ;;                           | AdditiveExpression AdditiveOperator MultiplicativeExpression .
-  ;; (additiveExpression)
-  ;; ;; AdditiveOperator         = "+" | "-" .
-  ;; (additiveOperator)
-  ;; ;; MultiplicativeExpression = ExponentExpression
-  ;; ;;                           | ExponentExpression ExponentOperator MultiplicativeExpression .
-  ;; ;;                           | ExponentExpression MultiplicativeOperator MultiplicativeExpression .
-  ;; (multiplicativeExpression)
-  ;; ;; MultiplicativeOperator   = "*" | "/" | "%" .
-  ;; (multiplicativeOperator)
-  ;; ;; ExponentExpression       = PipeExpression
-  ;; ;;                           | ExponentExpression ExponentOperator PipeExpression .
-  ;; (exponentExpression)
-  ;; ;; ExponentOperator         = "^" .
-  ;; (exponentOperator)
-  ;; ;; PipeExpression           = PostfixExpression
-  ;; ;;                           | PipeExpression PipeOperator UnaryExpression .
-  ;; (pipeExpression)
-  ;; ;; PipeOperator             = "|>" .
-  ;; (pipeOperator)
-  ;; ;; UnaryExpression          = PostfixExpression
-  ;; ;;                           | PrefixOperator UnaryExpression .
-  ;; (unaryExpression)
-  ;; ;; PrefixOperator           = "+" | "-" .
-  ;; (prefixOperator)
-  ;; ;; PostfixExpression        = PrimaryExpression
-  ;; ;;                           | PostfixExpression PostfixOperator .
-  ;; (postfixExpression)
-  ;; ;; PostfixOperator          = MemberExpression
-  ;; ;;                           | CallExpression
-  ;; ;;                           | IndexExpression .
-  ;; (postfixOperator)
 
+  (ComparisonOperator "=="  "!="  "<"  "<="  ">"  ">="  "=~"  "!~")
+
+  (AdditiveExpression MultiplicativeExpression
+                      (AdditiveExpression AdditiveOperator MultiplicativeExpression))
+
+  (AdditiveOperator "+" "-")
+
+  (MultiplicativeExpression ExponentExpression
+                            (ExponentExpression ExponentOperator MultiplicativeExpression)
+                            (ExponentExpression MultiplicativeOperator MultiplicativeExpression))
+
+  (MultiplicativeOperator "*" "/" "%")
+
+  (ExponentExpression PipeExpression
+                      (ExponentExpression ExponentOperator PipeExpression))
+
+  (ExponentOperator "^")
+
+  (PipeExpression PostfixExpression
+                  (PipeExpression PipeOperator UnaryExpression))
+
+  (PipeOperator "|>")
+
+  (UnaryExpression PostfixExpression
+                   (PrefixOperator UnaryExpression))
+
+  (PrefixOperator "+" "-")
+
+  (PostfixExpression primaryExpression
+                     (PostfixExpression PostfixOperator))
+
+  (PostfixOperator MemberExpression
+                   CallExpression
+                   IndexExpression)
   )
