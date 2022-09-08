@@ -11,7 +11,7 @@
   (file (packageClause importList statementList))
 
   ;; ImportList = { ImportDeclaration } .
-  (importList (ImportDeclaration ...))
+  (importList (importDeclaration ...))
 
   (type "null"
         Boolean
@@ -135,7 +135,6 @@
   ;; FunctionBody       = Expression | Block .
   (functionBody expression)
 
-
   ;; date              = year "-" month "-" day .
   (date (year "-" month "-" day))
   ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
@@ -160,7 +159,7 @@
   (keyword "and" "import" "not" "return" "option" "test" "empty" "in" "or" "package" "builtin")
 
   ;; identifier (letter { letter | unicode_digit } .
-  ;; (identifier (letter (letter )
+  ;; (identifier (letter (letter ))
 
   (operators
    "+" "==" "!=" "(" ")" "=>" "-" "<" "!~" "[" "]" "^"
