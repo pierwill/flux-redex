@@ -61,7 +61,8 @@
              returnStatement
              expressionStatement)
 
-  ;; (optionAssignment)
+  ;; OptionAssignment = "option" [ identifier "." ] identifier "=" Expression .
+  (optionAssignment ("option" identifier "=" expression))
 
   ;; (builtinStatement)
 
@@ -80,16 +81,40 @@
   (literal intLit
            floatLit
            stringLit
-           regexLit
+           ;; regexLit
            durationLit
            datetimeLit
-           pipeReceiveLit
+           ;; pipeReceiveLit
            recordLit
            arrayLit
            dictLit
            functionLit)
 
   (intLit integer)
+
+  (floatLit real)
+
+  (stringLit string)
+
+  ;; TODO maybe?
+  ;; (regexLit)
+
+  (durationLit (intLit durationUnit))
+
+  ;; date_time_lit     = date [ "T" time ] .
+  (datetimeLit (date "T" time))
+
+  ;; TODO
+  ;; (pipeReceiveLit)
+
+  ;; TODO
+  ;; (recordLit)
+
+  ;; TODO
+  ;; (arrayLit)
+
+  ;; TODO
+  ;; (dictLit)
 
   ;; FunctionLiteral    = FunctionParameters "=>" FunctionBody .
   (functionLit (functionParameters "=>" functionBody))
@@ -109,8 +134,6 @@
   ;; FunctionBody       = Expression | Block .
   (functionBody expression)
 
-  (durationLit (intLit durationUnit))
-
   (durationUnit
    "y"
    "mo"
@@ -125,8 +148,6 @@
    "ns"
    )
 
-  ;; date_time_lit     = date [ "T" time ] .
-  (datetimeLit (date "T" time))
   ;; date              = year "-" month "-" day .
   (date (year "-" month "-" day))
   ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
