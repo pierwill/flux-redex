@@ -14,7 +14,7 @@
   (importList (ImportDeclaration ...))
 
   (type "null"
-        boolean
+        Boolean
         string
 
         Time
@@ -27,6 +27,8 @@
         generator
         )
 
+  (Boolean boolean "null")
+  
   (typeConstraint addable
                   subtractable
                   divisable
@@ -55,6 +57,10 @@
 
   (identifier variable-not-otherwise-mentioned)
 
+
+
+
+  
   (literal intLit
            floatLit
            stringLit
@@ -74,9 +80,9 @@
 
   ;; FunctionParameters = "(" [ ParameterList [ "," ] ] ")" .
   (functionParameters ( "(" parameterList ")" )
-                      emptyList
+                      emptyParamList
                       )
-  (emptyList "()")
+  (emptyParamList "()")
 
   ;; ParameterList      = Parameter { "," Parameter } .
   (parameterList (parameter ...))
@@ -87,6 +93,45 @@
   ;; FunctionBody       = Expression | Block .
   (functionBody expression)
 
+(durationLit (intLit durationUnit))
+
+  (durationUnit
+   "y"
+   "mo"
+   "w"
+   "d"
+   "h"
+   "m"
+   "s"
+   "ms"
+   "us"
+   "μs"
+   "ns"
+   )
+
+  ;; date_time_lit     = date [ "T" time ] .
+  (datetimeLit (date "T" time))
+  ;; date              = year "-" month "-" day .
+  (date (year "-" month "-" day))
+  ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
+  (year (digit digit digit digit))
+  ;; month             = decimal_digit decimal_digit .
+  (month (digit digit))
+  ;; day               = decimal_digit decimal_digit .
+  (day (digit digit))
+  ;; time              = hour ":" minute ":" second [ fractional_second ] [ time_offset ] .
+  (time (hour ":" minute ":" second))
+  ;; hour              = decimal_digit decimal_digit .
+  (hour (digit digit))
+  ;; minute            = decimal_digit decimal_digit .
+  (minute (digit digit))
+  ;; second            = decimal_digit decimal_digit .
+  (second (digit digit))
+          ;; fractional_second = "."  { decimal_digit } .
+          ;; (fractionalSecond ("." digit))
+          ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
+          ;; (timeOffset ())
+  
   (keyword "and"
            "import"
            "not"
@@ -133,43 +178,4 @@
    "."
    "|>"
    )
-
-  (durationLit (intLit durationUnit))
-
-  (durationUnit
-   "y"
-   "mo"
-   "w"
-   "d"
-   "h"
-   "m"
-   "s"
-   "ms"
-   "us"
-   "μs"
-   "ns"
-   )
-
-  ;; date_time_lit     = date [ "T" time ] .
-  (datetimeLit)
-  ;; date              = year "-" month "-" day .
-  (date)
-  ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
-  (year)
-  ;; month             = decimal_digit decimal_digit .
-  month
-  ;; day               = decimal_digit decimal_digit .
-  day
-  ;; time              = hour ":" minute ":" second [ fractional_second ] [ time_offset ] .
-  time
-  ;; hour              = decimal_digit decimal_digit .
-  minute
-  ;; minute            = decimal_digit decimal_digit .
-  ;; second            = decimal_digit decimal_digit .
-  second
-  ;; fractional_second = "."  { decimal_digit } .
-  fractionalSecond
-  ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
-  timeOffset
   )
-
