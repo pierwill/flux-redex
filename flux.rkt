@@ -13,21 +13,29 @@
   ;; ImportList = { ImportDeclaration } .
   (importList (importDeclaration ...))
 
+  ;; A type defines the set of values and operations on those values.
+  ;; Types are never explicitly declared as part of the syntax except as part of a builtin statement.
+  ;; Types are always inferred from the usage of the value.
+  ;; Type inference follows a Hindley-Milner style inference system.
+  ;;
+  ;; TODO union types? https://docs.influxdata.com/flux/v0.x/spec/types/#union-types
   (type "null"
         Boolean
-        string
+        integer ;; uint | int | float
 
         Time
         duration
+
+        string
+
+        ;; bytes
+        ;; regex
 
         array
         record
         dictionary
         function
         generator
-
-        ;; regex
-        ;; bytes
         )
 
   (Boolean boolean "null")
@@ -44,16 +52,17 @@
                   timeable
                   stringable)
 
-  ;;   In addition to explicit blocks in the source code, there are implicit blocks:
+  ;; In addition to explicit blocks in the source code, there are implicit blocks:
   ;;
-  ;;     The universe block encompasses all Flux source text.
-  ;;     Each package has a package block containing all Flux source text for that package.
-  ;;     Each file has a file block containing all Flux source text in that file.
-  ;;     Each function literal has its own function block even if not explicitly declared.
+  ;;   - The universe block encompasses all Flux source text.
+  ;;   - Each package has a package block containing all Flux source text for that package.
+  ;;   - Each file has a file block containing all Flux source text in that file.
+  ;;   - Each function literal has its own function block even if not explicitly declared.
   ;;
   ;; Blocks nest and influence scoping.
   ;; https://docs.influxdata.com/flux/v0.x/spec/blocks/
   (block ("{" statementList "}" ))
+  (statementList (statement ...))
 
   (statement optionAssignment
              builtinStatement
@@ -110,13 +119,13 @@
   (datetimeLit (date "T" time))
 
   ;; TODO
-  ;; (pipeReceiveLit)
-
-  ;; TODO
   ;; (recordLit)
 
   ;; TODO
-  ;; (arrayLit)
+  ;; ArrayLiteral   = "[" ExpressionList "]" .
+  ;; ExpressionList = [ Expression { "," Expression } ] .
+  (arrayLit ("[" expressionList "]"))
+  (expressionList (expression ...))
 
   ;; TODO
   ;; (dictLit)
@@ -134,11 +143,24 @@
   (parameterList (parameter ...))
 
   ;; Parameter          = identifier [ "=" Expression ] .
+  ;; TODO multiple parameters
   (parameter identifier)
 
   ;; FunctionBody       = Expression | Block .
-  (functionBody expression)
+  (functionBody expression block)
 
+  ;; CallExpression = "(" PropertyList ")" .
+  (callExpression ( "(" propertyList ")" ))
+
+  (pipeReceiveLit "<-")
+
+  ;; IndexExpression = "[" Expression "]" .
+  (indexExpression ("[" expression "]"))
+
+  (memberExpression dotExpression memberBracketExpression)
+  (dotExpression ("." identifier))
+  (memberBracketExpression ("[" stringLit "]"))
+  
   ;; date              = year "-" month "-" day .
   (date (year "-" month "-" day))
   ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
@@ -218,7 +240,7 @@
   (PostfixExpression primaryExpression
                      (PostfixExpression PostfixOperator))
 
-  (PostfixOperator MemberExpression
-                   CallExpression
-                   IndexExpression)
+  (PostfixOperator memberExpression
+                   callExpression
+                   indexExpression)
   )
