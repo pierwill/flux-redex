@@ -10,8 +10,9 @@
   ;; File = [ PackageClause ] [ ImportList ] StatementList .
   (file (packageClause importList statementList))
 
-  ;; ImportList = { ImportDeclaration } .
   (importList (importDeclaration ...))
+  ;; TODO ImportDeclaration = "import" [identifier] string_lit .
+  (importDeclaration ("import"  string_lit))
 
   ;; A type defines the set of values and operations on those values.
   ;; Types are never explicitly declared as part of the syntax except as part of a builtin statement.
@@ -73,8 +74,42 @@
   ;; OptionAssignment = "option" [ identifier "." ] identifier "=" Expression .
   (optionAssignment ("option" identifier "=" expression))
 
-  ;; (builtinStatement)
-
+  ;; BEGIN builtin
+  ;; BuiltinStatement = "builtin" identifer ":" TypeExpression .
+  (builtinStatement ("builtin" identifier ":" TypeExpression))
+  ;; TypeExpression   = MonoType ["where" Constraints] .
+  (TypeExpression MonoType (MonoType "where" Constraints))
+  ;; MonoType = Tvar | Basic | Array | Record | Function .
+  (MonoType Tvar Basic Array Record Function)
+  ;; Tvar     = "A" … "Z" .
+  (Tvar string)                         ;fixme
+  ;; Basic    = "int" | "uint" | "float" | "string" | "bool" | "time" | "duration" | "bytes" | "regexp" .
+  (Basic "int" "uint" "float" "string" "bool" "time" "duration") ; TODO bytes and regex
+  ;; Array    = "[" MonoType "]" .
+  (Array ("[" MonoType "]"))
+  ;; Record   = ( "{" [Properties] "}" ) | ( "{" Tvar "with" Properties "}" ) .
+  (Record ("{" (Properties ...) "}") ("{" Tvar "with" Properties "}") )
+  ;; Function = "(" [Parameters] ")" "=>" MonoType .
+  (Function ("(" Parameters ")" "=>" MonoType))
+  
+  ;; Properties = Property { "," Property } .
+  (Properties (Property ...))
+  ;; Property   = identifier ":" MonoType .
+  (Property (identifer ":" MonoType))
+  
+  ;; Parameters = Parameter { "," Parameter } .
+  (Parameters (Parameter ...))
+  ;; Parameter  = [ "<-" | "?" ] identifier ":" MonoType .
+  (Parameter ("<-" identifier ":" MonoType)
+             ("?" identifier ":" MonoType))
+  ;; Constraints = Constraint { "," Constraint } .
+  (Constraints (Constraint ...))
+  ;; Constraint  = Tvar ":" Kinds .
+  (Constraint (Tvar ":" Kinds))
+  ;; Kinds       = identifier { "+" identifier } .
+  (Kinds identifer)                     ;FIXME
+  ;; END builtin
+  
   (variableAssignment (identifier "=" expression))
 
   (returnStatement ("return" expression))
@@ -118,7 +153,6 @@
   ;; date_time_lit     = date [ "T" time ] .
   (datetimeLit (date "T" time))
 
-  ;; TODO
   ;; RecordLiteral  = "{" RecordBody "}" .
   (recordLit ("{" recordBody "}"))
   ;; RecordBody     = WithProperties | PropertyList .
@@ -132,15 +166,18 @@
   (property (identifier ":" expression)
             (stringLit ":" expression))
 
-  ;; TODO
-  ;; ArrayLiteral   = "[" ExpressionList "]" .
-  ;; ExpressionList = [ Expression { "," Expression } ] .
   (arrayLit ("[" expressionList "]"))
   (expressionList (expression ...))
 
-  ;; TODO
-  ;; (dictLit)
-
+  ;; DictLiteral     = EmptyDict | "[" AssociativeList "]" .
+  (dictLit emptyDict
+           ("[" associativeList "]"))
+  (emptyDict ("[" ":" "]"))
+  ;; AssociativeList = Association { "," AssociativeList } .
+  (associativeList (association ...))
+  ;; Association     = Expression ":" Expression .
+  (association (expression ":" expression))
+  
   ;; FunctionLiteral    = FunctionParameters "=>" FunctionBody .
   (functionLit (functionParameters "=>" functionBody))
 
