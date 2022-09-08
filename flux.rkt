@@ -25,10 +25,13 @@
         dictionary
         function
         generator
+
+        ;; regex
+        ;; bytes
         )
 
   (Boolean boolean "null")
-  
+
   (typeConstraint addable
                   subtractable
                   divisable
@@ -40,6 +43,17 @@
                   negatable
                   timeable
                   stringable)
+
+  ;;   In addition to explicit blocks in the source code, there are implicit blocks:
+  ;;
+  ;;     The universe block encompasses all Flux source text.
+  ;;     Each package has a package block containing all Flux source text for that package.
+  ;;     Each file has a file block containing all Flux source text in that file.
+  ;;     Each function literal has its own function block even if not explicitly declared.
+  ;;
+  ;; Blocks nest and influence scoping.
+  ;; https://docs.influxdata.com/flux/v0.x/spec/blocks/
+  (block ("{" statementList "}" ))
 
   (statement optionAssignment
              builtinStatement
@@ -57,10 +71,6 @@
 
   (identifier variable-not-otherwise-mentioned)
 
-
-
-
-  
   (literal intLit
            floatLit
            stringLit
@@ -93,7 +103,7 @@
   ;; FunctionBody       = Expression | Block .
   (functionBody expression)
 
-(durationLit (intLit durationUnit))
+  (durationLit (intLit durationUnit))
 
   (durationUnit
    "y"
@@ -127,11 +137,11 @@
   (minute (digit digit))
   ;; second            = decimal_digit decimal_digit .
   (second (digit digit))
-          ;; fractional_second = "."  { decimal_digit } .
-          ;; (fractionalSecond ("." digit))
-          ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
-          ;; (timeOffset ())
-  
+  ;; fractional_second = "."  { decimal_digit } .
+  ;; (fractionalSecond ("." digit))
+  ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
+  ;; (timeOffset ())
+
   (keyword "and"
            "import"
            "not"
