@@ -15,7 +15,7 @@
 
   (redex-match Flux identifier (term foo))
   
-  (redex-match Flux assignment
+  (redex-match Flux variableAssignment
                (term
                 (foo "=" 1)))
 
