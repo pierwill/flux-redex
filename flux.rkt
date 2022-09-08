@@ -1,6 +1,8 @@
 #lang racket
 (require redex)
 
+(provide Flux)
+
 (define-language Flux
 
   (packageClause ("package" identifier))
@@ -51,6 +53,8 @@
               literal
               ("(" expression ")"))
 
+  (identifier variable-not-otherwise-mentioned)
+  
   (literal intLit
            floatLit
            stringLit
@@ -62,6 +66,8 @@
            arrayLit
            dictLit
            functionLit)
+
+  (intLit integer)
 
   (keyword "and"
            "import"
@@ -78,7 +84,7 @@
   (assignment (identifier "=" expression))
 
   ;; identifier (letter { letter | unicode_digit } .
-  (identifier variable-not-otherwise-mentioned)
+  ;; (identifier (letter (letter )
 
   (operators
    "+"
@@ -122,7 +128,7 @@
    "s"
    "ms"
    "us"
-   "µs"
+   "μs"
    "ns"
    )
 
@@ -138,3 +144,4 @@
   ;; fractional_second = "."  { decimal_digit } .
   ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
   )
+
