@@ -5,39 +5,49 @@
 
 (module+ test
 
-  (redex-match Flux block
+  (test-match Flux block
                (term 𝒰))
 
-  (redex-match Flux primaryExpression
+  (test-match Flux primaryExpression
                (term (1 "w")))
 
-  (redex-match Flux primaryExpression
+  (test-match Flux primaryExpression
                (term
                 ("(" (1 "w") ")" )))
 
-  (redex-match Flux variableAssignment
+  (test-match Flux variableAssignment
                (term
                 (foo "=" 1)))
 
-  (redex-match Flux functionLit
+  (test-match Flux functionLit
                (term ("()" "=>" 1)))
 
   ;; function definition
-  (redex-match Flux variableAssignment
+  (test-match Flux variableAssignment
                (term (sup
                       "="
                       ( "()" "=>" 1))))
 
-  (redex-match Flux property
+  (test-match Flux property
                (term (sup ":" 1)))
 
-  (redex-match Flux callExpression
+  (test-match Flux callExpression
                (term ("(" ((sup ":" 1)) ")")))
 
-  (redex-match Flux builtinStatement
+  (test-match Flux builtinStatement
                (term ("builtin" filter ":" "int")
                      ))
 
+  (test-match Flux builtinStatement
+               (term ("builtin" filter ":" ("[" "int" "]"))
+                     ))
+
+  (test-match Flux builtinStatement
+               (term ("builtin" filter ":" ("["
+                                            "int"
+                                            "]"))
+                     ))
+  
   ;; TODO
   ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
   )
