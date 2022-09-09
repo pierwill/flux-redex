@@ -14,45 +14,7 @@
   ;; TODO ImportDeclaration = "import" [identifier] string_lit .
   (importDeclaration ("import"  string_lit))
 
-  ;; A type defines the set of values and operations on those values.
-  ;; Types are never explicitly declared as part of the syntax except as part of a builtin statement.
-  ;; Types are always inferred from the usage of the value.
-  ;; Type inference follows a Hindley-Milner style inference system.
-  ;;
-  ;; TODO union types? https://docs.influxdata.com/flux/v0.x/spec/types/#union-types
-  (type "null"
-        Boolean
-        integer ;; uint | int | float
-
-        Time
-        duration
-
-        string
-
-        ;; bytes
-        ;; regex
-
-        array
-        record
-        dictionary
-        function
-        generator
-        )
-
-  (Boolean boolean "null")
-
-  (typeConstraint addable
-                  subtractable
-                  divisable
-                  numeric
-                  comparable
-                  equatable
-                  nullable
-                  record
-                  negatable
-                  timeable
-                  stringable)
-
+  
   ;; In addition to explicit blocks in the source code, there are implicit blocks:
   ;;
   ;;   - The universe block encompasses all Flux source text.
@@ -209,7 +171,8 @@
   (memberExpression dotExpression memberBracketExpression)
   (dotExpression ("." identifier))
   (memberBracketExpression ("[" stringLit "]"))
-  
+
+  ;; 
   ;; date              = year "-" month "-" day .
   (date (year "-" month "-" day))
   ;; TODO for these, maybe we can escape to Racket for a length check?
@@ -232,14 +195,7 @@
   ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
   ;; (timeOffset ())
 
-  ;; (keyword "and" "import" "not" "return" "option" "test" "empty" "in" "or" "package" "builtin")
-
-  ;; (operators
-   ;; "+" "==" "!=" "(" ")" "=>" "-" "<" "!~" "[" "]" "^"
-   ;; "*" ">" "=~" "{" "}" "/" "<=" "=" "," ":" "%" ">=" "<-" "." "|>" )
-
   ;; Operators
-
   (LogicalOperator "and" "or")
 
   (UnaryLogicalOperator "not" "exists")
@@ -272,7 +228,7 @@
                      (LogicalExpression LogicalOperator UnaryLogicalExpression))
 
   (UnaryLogicalExpression ComparisonExpression
-                           (UnaryLogicalOperator UnaryLogicalExpression))
+                          (UnaryLogicalOperator UnaryLogicalExpression))
 
   (ComparisonExpression MultiplicativeExpression
                         (ComparisonExpression ComparisonOperator MultiplicativeExpression))
@@ -296,4 +252,42 @@
   (PostfixExpression primaryExpression
                      (PostfixExpression PostfixOperator))
 
+  ;; ;; A type defines the set of values and operations on those values.
+  ;;   ;; Types are never explicitly declared as part of the syntax except as part of a builtin statement.
+  ;;   ;; Types are always inferred from the usage of the value.
+  ;;   ;; Type inference follows a Hindley-Milner style inference system.
+  ;;   ;;
+  ;;   ;; TODO union types? https://docs.influxdata.com/flux/v0.x/spec/types/#union-types
+  ;;   (type "null"
+  ;;         Boolean
+  ;;         integer ;; uint | int | float
+
+  ;;         Time
+  ;;         duration
+
+  ;;         string
+
+  ;;         ;; bytes
+  ;;         ;; regex
+
+  ;;         array
+  ;;         record
+  ;;         dictionary
+  ;;         function
+  ;;         generator
+  ;;         )
+
+  ;;   (Boolean boolean "null")
+
+  ;;   (typeConstraint addable
+  ;;                   subtractable
+  ;;                   divisable
+  ;;                   numeric
+  ;;                   comparable
+  ;;                   equatable
+  ;;                   nullable
+  ;;                   record
+  ;;                   negatable
+  ;;                   timeable
+  ;;                   stringable)
   )
