@@ -211,6 +211,7 @@
   
   ;; date              = year "-" month "-" day .
   (date (year "-" month "-" day))
+  ;; TODO for these, maybe we can escape to Racket for a length check?
   ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
   (year (digit digit digit digit))
   ;; month             = decimal_digit decimal_digit .
@@ -230,65 +231,68 @@
   ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
   ;; (timeOffset ())
 
-  (keyword "and" "import" "not" "return" "option" "test" "empty" "in" "or" "package" "builtin")
+  ;; (keyword "and" "import" "not" "return" "option" "test" "empty" "in" "or" "package" "builtin")
 
-  (operators
-   "+" "==" "!=" "(" ")" "=>" "-" "<" "!~" "[" "]" "^"
-   "*" ">" "=~" "{" "}" "/" "<=" "=" "," ":" "%" ">=" "<-" "." "|>" )
+  ;; (operators
+   ;; "+" "==" "!=" "(" ")" "=>" "-" "<" "!~" "[" "]" "^"
+   ;; "*" ">" "=~" "{" "}" "/" "<=" "=" "," ":" "%" ">=" "<-" "." "|>" )
 
-  ;; Operator precedence
-  ;; -------------------
+  ;; Operators
 
+  (LogicalOperator "and" "or")
+
+  (UnaryLogicalOperator "not" "exists")
+
+  (ComparisonOperator "=="  "!="  "<"  "<="  ">"  ">="  "=~"  "!~")
+  
+  (AdditiveOperator "+" "-")
+  
+  (MultiplicativeOperator "*" "/" "%")
+  
+  (ExponentOperator "^")
+  
+  (PipeOperator "|>")
+  
+  (PrefixOperator "+" "-")
+
+  (PostfixOperator memberExpression
+                   callExpression
+                   indexExpression)
+
+  ;; Expressions
+  ;;
+  ;; Includes operator precedence
   (expression ConditionalExpression)
 
   (ConditionalExpression LogicalExpression
                          ("if" expression "then" expression "else" expression))
-
+  
   (LogicalExpression UnaryLogicalExpression
                      (LogicalExpression LogicalOperator UnaryLogicalExpression))
 
-  (LogicalOperator "and" "or")
-
   (UnaryLogicalExpression ComparisonExpression
-                          (UnaryLogicalOperator UnaryLogicalExpression))
-
-  (UnaryLogicalOperator "not" "exists")
+                           (UnaryLogicalOperator UnaryLogicalExpression))
 
   (ComparisonExpression MultiplicativeExpression
                         (ComparisonExpression ComparisonOperator MultiplicativeExpression))
 
-  (ComparisonOperator "=="  "!="  "<"  "<="  ">"  ">="  "=~"  "!~")
-
   (AdditiveExpression MultiplicativeExpression
                       (AdditiveExpression AdditiveOperator MultiplicativeExpression))
-
-  (AdditiveOperator "+" "-")
 
   (MultiplicativeExpression ExponentExpression
                             (ExponentExpression ExponentOperator MultiplicativeExpression)
                             (ExponentExpression MultiplicativeOperator MultiplicativeExpression))
 
-  (MultiplicativeOperator "*" "/" "%")
-
   (ExponentExpression PipeExpression
                       (ExponentExpression ExponentOperator PipeExpression))
-
-  (ExponentOperator "^")
 
   (PipeExpression PostfixExpression
                   (PipeExpression PipeOperator UnaryExpression))
 
-  (PipeOperator "|>")
-
   (UnaryExpression PostfixExpression
                    (PrefixOperator UnaryExpression))
-
-  (PrefixOperator "+" "-")
 
   (PostfixExpression primaryExpression
                      (PostfixExpression PostfixOperator))
 
-  (PostfixOperator memberExpression
-                   callExpression
-                   indexExpression)
   )
