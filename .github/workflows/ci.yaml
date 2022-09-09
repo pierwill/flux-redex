@@ -15,7 +15,7 @@ jobs:
       - name: Install Racket
         run: |
           sudo add-apt-repository ppa:plt/racket
-          sudo apt install racket
+          sudo apt install xvfb racket
       - name: Run Tests
         run: |
-          ./test
+          xvfb-run ./test
