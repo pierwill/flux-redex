@@ -162,8 +162,7 @@
   (DictLit EmptyDict
            ("[" AssociativeList "]"))
   (EmptyDict ("[" ":" "]"))
-  ;; AssociativeList = Association { "," AssociativeList } .
-  (AssociativeList (Association ...))
+  (AssociativeList (Association AssociativeList ...))
   (Association (Expression ":" Expression))
 
   (FunctionLit (FunctionParameters "=>" FunctionBody))
@@ -175,10 +174,8 @@
                       )
   (emptyParamList "()")
 
-  ;; ParameterList      = Parameter { "," Parameter } .
   (ParameterList (Parameter Parameter ...))
 
-  ;; Parameter          = identifier [ "=" Expression ] .
   (Parameter Identifier (Identifier "=" Expression))
 
   (FunctionBody Expression Block)
