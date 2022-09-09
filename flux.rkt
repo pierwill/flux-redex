@@ -18,7 +18,6 @@
 
   ;; Blocks
   ;; ------
-  ;; See https://docs.influxdata.com/flux/v0.x/spec/blocks/
   (Block 𝒰
          PackageBlock
          FileBlock
@@ -43,7 +42,7 @@
   ;; TypeExpression   = MonoType ["where" Constraints] .
   (TypeExpression MonoType (MonoType "where" Constraints))
   (MonoType Tvar Basic Array Record Function)
-  ;; Tvar     = "A" … "Z" .
+  ;; Tvar     = "A" ... "Z" .
   ;; FIXME
   (Tvar string)
   (Basic "int" "uint" "float" "string" "bool" "time" "duration") ; TODO "bytes" and "regex"

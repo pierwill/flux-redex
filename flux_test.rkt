@@ -83,9 +83,6 @@
                      )
                     ))
 
-  ;; TODO
-  ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
-
   (test-match Flux FunctionParameters
               (term ("(" (foo bar) ")")
                     ))
@@ -94,8 +91,26 @@
                (term (a "+" b)
                      ))
 
+  ;; TODO
+  ;; (test-match Flux Expression
+  ;;              (term (a "+" b)
+  ;;                    ))
+
+  ;; TODO
+  ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
+
+  ;; TODO
+  ;; add = (a, b) => a + b
+  ;; (redex-match Flux FunctionLit
+  ;;              (term
+  ;;               (
+  ;;                ("(" (a b) ")")     ; FunctionParameters
+  ;;                "=>"
+  ;;                (a "+" b)                 ; FunctionBody
+  ;;                )
+  ;;              ))
+
   ;; TODO constraints. This should fail:
   ;;     add(a: {}, b: {})
   ;; See spec example.
-
  )
