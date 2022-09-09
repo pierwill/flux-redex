@@ -67,7 +67,7 @@
   (Constraint (Tvar ":" Kinds))
   ;; Kinds       = identifier { "+" identifier } .
   ;; FIXME
-  (Kinds identifer)
+  (Kinds identifier)
   
   (variableAssignment (identifier "=" expression))
 
