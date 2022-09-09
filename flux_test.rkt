@@ -67,6 +67,19 @@
                                         "]"))
                     ))
 
+  (test-match Flux RecordLit
+              (term (
+                     "{"
+                     ((sup ":" 1))
+                     "}"
+                     )
+                ))
+
   ;; TODO
   ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
-  )
+
+  ;; TODO constraints. This should fail:
+  ;;     add(a: {}, b: {})
+  ;; See spec example.
+
+ )
