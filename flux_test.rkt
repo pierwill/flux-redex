@@ -46,21 +46,23 @@
               (term ("T1" ":" fooo)
                     ))
 
-  ;; (test-match Flux TypeExpression
-  ;;             (term ("int" "where"
-  ;;                          )
-  ;;                   ))
+  (test-match Flux TypeExpression
+              (term "time"))
+
+  (test-match Flux TypeExpression
+              (term ("T1" "where" (("T1" ":" fooo)))
+                    ))
 
   (test-match Flux builtinStatement
-               (term ("builtin" filter ":" "int")
+               (term ("builtin" foo ":" "int")
                      ))
 
   (test-match Flux builtinStatement
-               (term ("builtin" filter ":" ("[" "int" "]"))
+               (term ("builtin" foo ":" ("[" "int" "]"))
                      ))
 
   (test-match Flux builtinStatement
-               (term ("builtin" filter ":" ("["
+               (term ("builtin" foo ":" ("["
                                             "int"
                                             "]"))
                      ))
