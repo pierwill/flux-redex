@@ -58,6 +58,7 @@
   ;; Parameters = Parameter { "," Parameter } .
   (Parameters (Parameter ...))
   ;; Parameter  = [ "<-" | "?" ] identifier ":" MonoType .
+  ;; FIXME
   (Parameter ("<-" identifier ":" MonoType)
              ("?" identifier ":" MonoType))
   ;; Constraints = Constraint { "," Constraint } .

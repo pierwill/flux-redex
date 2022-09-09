@@ -33,4 +33,11 @@
 
   (redex-match Flux callExpression
                (term ("(" ((sup ":" 1)) ")")))
+
+  (redex-match Flux builtinStatement
+               (term ("builtin" filter ":" "int")
+                     ))
+
+  ;; TODO
+  ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
   )
