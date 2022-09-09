@@ -51,10 +51,10 @@
   (Property-in-builtin (Label ":" MonoType))
   (Label Identifier StringLit)
   ;; Parameters = Parameter { "," Parameter } .
-  (Parameters (Parameter ...))
+  (Parameters (Parameter-in-builtin ...))
   ;; Parameter  = [ "<-" | "?" ] identifier ":" MonoType .
   ;; FIXME
-  (Parameter ("<-" Identifier ":" MonoType)
+  (Parameter-in-builtin ("<-" Identifier ":" MonoType)
              ("?" Identifier ":" MonoType))
   ;; Constraints = Constraint { "," Constraint } .
   (Constraints (Constraint ...))
