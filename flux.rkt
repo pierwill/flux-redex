@@ -235,7 +235,8 @@
   (UnaryLogicalExpression ComparisonExpression
                           (UnaryLogicalOperator UnaryLogicalExpression))
 
-  (ComparisonExpression MultiplicativeExpression
+  (ComparisonExpression AdditiveExpression
+                        MultiplicativeExpression
                         (ComparisonExpression ComparisonOperator MultiplicativeExpression))
 
   (AdditiveExpression MultiplicativeExpression

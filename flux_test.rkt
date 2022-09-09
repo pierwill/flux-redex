@@ -94,10 +94,11 @@
   (test-match Flux ConditionalExpression
                (term ("if" a "then" b "else" c)
                      ))
+
   ;; TODO
-  ;; (test-match Flux Expression
-  ;;              (term (a "+" b)
-  ;;                    ))
+  (test-match Flux Expression
+               (term (a "+" b)
+                     ))
 
   ;; TODO
   ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
