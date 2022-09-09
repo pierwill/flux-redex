@@ -182,6 +182,7 @@
   (functionLit (functionParameters "=>" functionBody))
 
   ;; FunctionParameters = "(" [ ParameterList [ "," ] ] ")" .
+  ;; TODO this done definitely needs to be zero or more
   (functionParameters ( "(" parameterList ")" )
                       emptyParamList
                       )
