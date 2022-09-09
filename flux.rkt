@@ -146,10 +146,10 @@
   (second (digit digit))
   ;; fractional_second = "."  { decimal_digit } .
   (fractionalSecond ("." digit))
-  ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
   ;; FIXME
-  (timeOffset ("Z" "+" hour ":" minute)
-              ("Z" "-" hour ":" minute))
+  (timeOffset "Z"
+              ("+" hour ":" minute)
+              ("-" hour ":" minute))
 
   (RecordLit ("{" RecordBody "}"))
   (RecordBody WithProperties PropertyList)
