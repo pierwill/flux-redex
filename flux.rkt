@@ -9,11 +9,13 @@
   ;; --------
   (PackageClause ("package" Identifier))
   ;; File = [ PackageClause ] [ ImportList ] StatementList .
-  (File (PackageClause ImportList StatementList))
+  (File StatementList
+        (PackageClause StatementList)
+        (ImportList StatementList)
+        (PackageClause ImportList StatementList))
   (ImportList (ImportDeclaration ...))
-  ;; ImportDeclaration = "import" [identifier] string_lit .
-  ;; FIXME
-  (ImportDeclaration ("import" string_lit))
+  (ImportDeclaration ("import" StringLit)
+                     ("import" Identifier StringLit))
 
   ;; Blocks
   ;; ------
@@ -34,7 +36,8 @@
              ExpressionStatement)
 
   ;; OptionAssignment = "option" [ identifier "." ] identifier "=" Expression .
-  (OptionAssignment ("option" Identifier "=" Expression))
+  (OptionAssignment ("option" OptionPath "=" Expression))
+  (OptionPath Identifier (Identifier "." Identifier))
 
   (BuiltinStatement ("builtin" Identifier ":" TypeExpression))
   ;; TODO does this all belong to/in the type system?
@@ -62,14 +65,16 @@
   ;; Parameter  = [ "<-" | "?" ] identifier ":" MonoType .
   ;; FIXME
   (Parameter-in-builtin ("<-" Identifier ":" MonoType)
-             ("?" Identifier ":" MonoType))
+                        (Identifier ":" Monotype)
+                        ("<-" Identifier ":" MonoType)
+                        ("?" Identifier ":" MonoType))
   ;; Constraints = Constraint { "," Constraint } .
   (Constraints (Constraint ...))
   (Constraint (Tvar ":" Kinds))
   ;; Kinds       = identifier { "+" identifier } .
   ;; FIXME
   (Kinds Identifier)
-  
+
   (VariableAssignment (Identifier "=" Expression))
 
   (ReturnStatement ("return" Expression))
@@ -118,9 +123,8 @@
   (durationMagnitude integer)
   (durationUnit "y" "mo" "w" "d" "h" "m" "s" "ms" "us" "μs" "ns")
 
-  ;; date_time_lit     = date [ "T" time ] .
   ;; FIXME
-  (DateTimeLit (date "T" time))
+  (DateTimeLit date (date "T" time))
   (date (year "-" month "-" day))
   ;; TODO for these, maybe we can escape to Racket for a length check?
   ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
@@ -143,6 +147,7 @@
   ;; fractional_second = "."  { decimal_digit } .
   (fractionalSecond ("." digit))
   ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
+  ;; FIXME
   (timeOffset ("Z" "+" hour ":" minute)
               ("Z" "-" hour ":" minute))
 
@@ -150,12 +155,13 @@
   (RecordBody WithProperties PropertyList)
   (WithProperties (Identifier "with" PropertyList))
   ;; PropertyList   = [ Property { "," Property } ] .
-  ;; FIXME
+  ;; FIXME could be empty?
   (PropertyList (Property ...))
   ;; Property       = identifier [ ":" Expression ]
   ;;                | string_lit ":" Expression .
   ;; FIXME
-  (Property (Identifier ":" Expression)
+  (Property Identifier
+            (Identifier ":" Expression)
             (StringLit ":" Expression))
 
   (ArrayLit ("[" expressionList "]"))
@@ -167,7 +173,7 @@
   ;; AssociativeList = Association { "," AssociativeList } .
   (AssociativeList (Association ...))
   (Association (Expression ":" Expression))
-  
+
   (FunctionLit (FunctionParameters "=>" FunctionBody))
 
   ;; FunctionParameters = "(" [ ParameterList [ "," ] ] ")" .
@@ -182,8 +188,7 @@
   (ParameterList (Parameter ...))
 
   ;; Parameter          = identifier [ "=" Expression ] .
-  ;; FIXME multiple parameters
-  (Parameter Identifier)
+  (Parameter Identifier (Identifier "=" Expression))
 
   (FunctionBody Expression Block)
 
@@ -197,7 +202,6 @@
   (DotExpression ("." Identifier))
   (MemberBracketExpression ("[" StringLit "]"))
 
-
   ;; Operators
   ;; ---------
   (LogicalOperator "and" "or")
@@ -205,15 +209,15 @@
   (UnaryLogicalOperator "not" "exists")
 
   (ComparisonOperator "=="  "!="  "<"  "<="  ">"  ">="  "=~"  "!~")
-  
+
   (AdditiveOperator "+" "-")
-  
+
   (MultiplicativeOperator "*" "/" "%")
-  
+
   (ExponentOperator "^")
-  
+
   (PipeOperator "|>")
-  
+
   (PrefixOperator "+" "-")
 
   (PostfixOperator MemberExpression
@@ -228,7 +232,7 @@
 
   (ConditionalExpression LogicalExpression
                          ("if" Expression "then" Expression "else" Expression))
-  
+
   (LogicalExpression UnaryLogicalExpression
                      (LogicalExpression LogicalOperator UnaryLogicalExpression))
 
@@ -283,9 +287,9 @@
   ;; Type constraints are a type system concept used to implement static ad hoc polymorphism.
   ;; For example, `add = (a, b) => a + b` is a function that is defined only for `Addable` types.
   ;; If one were to pass a record to `add` like so:
-  ;; 
+  ;;
   ;;     add(a: {}, b: {})
-  ;; 
+  ;;
   ;; the result would be a compile-time type error because records are not addable.
   ;; Like types, constraints are never explicitly declared but rather inferred from the context.
   ;;   (TypeConstraint Addable
