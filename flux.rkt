@@ -8,7 +8,6 @@
   ;; Packages
   ;; --------
   (PackageClause ("package" Identifier))
-  ;; File = [ PackageClause ] [ ImportList ] StatementList .
   (File StatementList
         (PackageClause StatementList)
         (ImportList StatementList)
@@ -62,13 +61,11 @@
   (Label Identifier StringLit)
   ;; Parameters = Parameter { "," Parameter } .
   (Parameters (Parameter-in-builtin ...))
-  ;; Parameter  = [ "<-" | "?" ] identifier ":" MonoType .
-  ;; FIXME
-  (Parameter-in-builtin ("<-" Identifier ":" MonoType)
-                        (Identifier ":" Monotype)
+  (Parameter-in-builtin (Identifier ":" Monotype)
                         ("<-" Identifier ":" MonoType)
                         ("?" Identifier ":" MonoType))
   ;; Constraints = Constraint { "," Constraint } .
+  ;; FIXME
   (Constraints (Constraint ...))
   (Constraint (Tvar ":" Kinds))
   ;; Kinds       = identifier { "+" identifier } .
