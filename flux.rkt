@@ -176,8 +176,7 @@
   (emptyParamList "()")
 
   ;; ParameterList      = Parameter { "," Parameter } .
-  ;; TODO check me
-  (ParameterList (Parameter ...))
+  (ParameterList (Parameter Parameter ...))
 
   ;; Parameter          = identifier [ "=" Expression ] .
   (Parameter Identifier (Identifier "=" Expression))
