@@ -23,16 +23,16 @@
 
   ;; Statements
   (StatementList (Statement ...))
-  (Statement optionAssignment
-             builtinStatement
-             variableAssignment
-             returnStatement
-             expressionStatement)
+  (Statement OptionAssignment
+             BuiltinStatement
+             VariableAssignment
+             ReturnStatement
+             ExpressionStatement)
 
   ;; OptionAssignment = "option" [ identifier "." ] identifier "=" Expression .
-  (optionAssignment ("option" Identifier "=" expression))
+  (OptionAssignment ("option" Identifier "=" Expression))
 
-  (builtinStatement ("builtin" Identifier ":" TypeExpression))
+  (BuiltinStatement ("builtin" Identifier ":" TypeExpression))
   ;; TypeExpression   = MonoType ["where" Constraints] .
   (TypeExpression MonoType (MonoType "where" Constraints))
   (MonoType Tvar Basic Array Record Function)
@@ -46,9 +46,10 @@
   ;; Function = "(" [Parameters] ")" "=>" MonoType .
   (Function ("(" Parameters ")" "=>" MonoType))
   ;; Properties = Property { "," Property } .
-  (Properties (Property ...))
-  (Property (Label ":" MonoType))
-  (Label Identifier stringLit)
+  (Properties (Property-in-builtin ...))
+  ;; TODO defining property twice?
+  (Property-in-builtin (Label ":" MonoType))
+  (Label Identifier StringLit)
   ;; Parameters = Parameter { "," Parameter } .
   (Parameters (Parameter ...))
   ;; Parameter  = [ "<-" | "?" ] identifier ":" MonoType .
@@ -62,15 +63,15 @@
   ;; FIXME
   (Kinds Identifier)
   
-  (variableAssignment (Identifier "=" expression))
+  (VariableAssignment (Identifier "=" Expression))
 
-  (returnStatement ("return" expression))
+  (ReturnStatement ("return" Expression))
 
-  (expressionStatement expression)
+  (ExpressionStatement Expression)
 
-  (primaryExpression Identifier
-                     literal
-                     ("(" expression ")"))
+  (PrimaryExpression Identifier
+                     Literal
+                     ("(" Expression ")"))
 
   ;; TODO decide how to handle this
   ;; identifier (letter { letter | unicode_digit } .
@@ -79,38 +80,38 @@
 
   (digit "0" "1" "2" "3" "4" "5" "6" "7" "8" "9")
 
-  (literal intLit
-           floatLit
-           stringLit
+  (Literal IntLit
+           FloatLit
+           StringLit
            ;; regexLit
-           durationLit
-           datetimeLit
-           pipeReceiveLit
-           recordLit
-           arrayLit
-           dictLit
-           functionLit)
+           DateTimeLit
+           DurationLit
+           PipeReceiveLit
+           RecordLit
+           ArrayLit
+           DictLit
+           FunctionLit)
 
-  (intLit integer)
+  (IntLit integer)
 
   ;; TODO digits?
   ;; float_lit = decimals "." [ decimals ]
   ;;     | "." decimals .
   ;; decimals  = decimal_digit { decimal_digit } .
-  (floatLit real)
+  (FloatLit real)
 
-  (stringLit string)
+  (StringLit string)
 
   ;; TODO maybe?
   ;; (regexLit)
 
-  (durationLit (durationMagnitude durationUnit))
+  (DurationLit (durationMagnitude durationUnit))
   (durationMagnitude integer)
   (durationUnit "y" "mo" "w" "d" "h" "m" "s" "ms" "us" "μs" "ns")
 
   ;; date_time_lit     = date [ "T" time ] .
   ;; FIXME
-  (datetimeLit (date "T" time))
+  (DateTimeLit (date "T" time))
   (date (year "-" month "-" day))
   ;; TODO for these, maybe we can escape to Racket for a length check?
   ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
@@ -136,29 +137,29 @@
   (timeOffset ("Z" "+" hour ":" minute)
               ("Z" "-" hour ":" minute))
 
-  (recordLit ("{" recordBody "}"))
-  (recordBody withProperties propertyList)
-  (withProperties (Identifier "with" propertyList))
+  (RecordLit ("{" RecordBody "}"))
+  (RecordBody WithProperties PropertyList)
+  (WithProperties (Identifier "with" PropertyList))
   ;; PropertyList   = [ Property { "," Property } ] .
   ;; FIXME
-  (propertyList (property ...))
+  (PropertyList (Property ...))
   ;; Property       = identifier [ ":" Expression ]
   ;;                | string_lit ":" Expression .
   ;; FIXME
-  (property (Identifier ":" expression)
-            (stringLit ":" expression))
+  (Property (Identifier ":" Expression)
+            (StringLit ":" Expression))
 
-  (arrayLit ("[" expressionList "]"))
-  (expressionList (expression ...))
+  (ArrayLit ("[" expressionList "]"))
+  (expressionList (Expression ...))
 
-  (dictLit emptyDict
+  (DictLit emptyDict
            ("[" associativeList "]"))
   (emptyDict ("[" ":" "]"))
   ;; AssociativeList = Association { "," AssociativeList } .
   (associativeList (association ...))
-  (association (expression ":" expression))
+  (association (Expression ":" Expression))
   
-  (functionLit (functionParameters "=>" functionBody))
+  (FunctionLit (functionParameters "=>" functionBody))
 
   ;; FunctionParameters = "(" [ ParameterList [ "," ] ] ")" .
   ;; FIXME
@@ -175,17 +176,17 @@
   ;; FIXME multiple parameters
   (parameter Identifier)
 
-  (functionBody expression Block)
+  (functionBody Expression Block)
 
-  (callExpression ( "(" propertyList ")" ))
+  (CallExpression ( "(" PropertyList ")" ))
 
-  (pipeReceiveLit "<-")
+  (PipeReceiveLit "<-")
 
-  (indexExpression ("[" expression "]"))
+  (indexExpression ("[" Expression "]"))
 
   (memberExpression dotExpression memberBracketExpression)
   (dotExpression ("." Identifier))
-  (memberBracketExpression ("[" stringLit "]"))
+  (memberBracketExpression ("[" StringLit "]"))
 
 
   ;; Operators
@@ -206,16 +207,16 @@
   (PrefixOperator "+" "-")
 
   (PostfixOperator memberExpression
-                   callExpression
+                   CallExpression
                    indexExpression)
 
   ;; Expressions
   ;;
   ;; Includes operator precedence
-  (expression ConditionalExpression)
+  (Expression ConditionalExpression)
 
   (ConditionalExpression LogicalExpression
-                         ("if" expression "then" expression "else" expression))
+                         ("if" Expression "then" Expression "else" Expression))
   
   (LogicalExpression UnaryLogicalExpression
                      (LogicalExpression LogicalOperator UnaryLogicalExpression))
@@ -242,7 +243,7 @@
   (UnaryExpression PostfixExpression
                    (PrefixOperator UnaryExpression))
 
-  (PostfixExpression primaryExpression
+  (PostfixExpression PrimaryExpression
                      (PostfixExpression PostfixOperator))
 
   ;; ;; A type defines the set of values and operations on those values.

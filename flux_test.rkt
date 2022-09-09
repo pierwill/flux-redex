@@ -6,33 +6,33 @@
 (module+ test
 
   (test-match Flux Block
-               (term 𝒰))
+              (term 𝒰))
 
-  (test-match Flux primaryExpression
+  (test-match Flux PrimaryExpression
               (term (1 "w")))
 
-  (test-match Flux primaryExpression
-               (term
-                ("(" (1 "w") ")" )
-                ))
+  (test-match Flux PrimaryExpression
+              (term
+               ("(" (1 "w") ")" )
+               ))
 
-  (test-match Flux variableAssignment
-               (term (foo "=" 1)))
+  (test-match Flux VariableAssignment
+              (term (foo "=" 1)))
 
-  (test-match Flux functionLit
-               (term ("()" "=>" 1)))
+  (test-match Flux FunctionLit
+              (term ("()" "=>" 1)))
 
   ;; function definition
-  (test-match Flux variableAssignment
-               (term (sup
-                      "="
-                      ( "()" "=>" 1))
-                     ))
+  (test-match Flux VariableAssignment
+              (term (sup
+                     "="
+                     ( "()" "=>" 1))
+                    ))
 
-  (test-match Flux property
-               (term (sup ":" 1)))
+  (test-match Flux Property
+              (term (sup ":" 1)))
 
-  (test-match Flux callExpression
+  (test-match Flux CallExpression
               (term ("(" ((sup ":" 1)) ")")
                     ))
 
@@ -53,19 +53,19 @@
               (term ("T1" "where" (("T1" ":" fooo)))
                     ))
 
-  (test-match Flux builtinStatement
-               (term ("builtin" foo ":" "int")
-                     ))
+  (test-match Flux BuiltinStatement
+              (term ("builtin" foo ":" "int")
+                    ))
 
-  (test-match Flux builtinStatement
-               (term ("builtin" foo ":" ("[" "int" "]"))
-                     ))
+  (test-match Flux BuiltinStatement
+              (term ("builtin" foo ":" ("[" "int" "]"))
+                    ))
 
-  (test-match Flux builtinStatement
-               (term ("builtin" foo ":" ("["
-                                            "int"
-                                            "]"))
-                     ))
+  (test-match Flux BuiltinStatement
+              (term ("builtin" foo ":" ("["
+                                        "int"
+                                        "]"))
+                    ))
 
   ;; TODO
   ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
