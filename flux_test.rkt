@@ -90,6 +90,10 @@
               (term ("(" (foo bar) ")")
                     ))
 
+  (test-match Flux AdditiveExpression
+               (term (a "+" b)
+                     ))
+
   ;; TODO constraints. This should fail:
   ;;     add(a: {}, b: {})
   ;; See spec example.
