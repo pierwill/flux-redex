@@ -5,13 +5,16 @@
 
 (module+ test
 
+  (redex-match Flux block
+               (term 𝒰))
+
   (redex-match Flux primaryExpression
                (term (1 "w")))
 
   (redex-match Flux primaryExpression
                (term
                 ("(" (1 "w") ")" )))
-  
+
   (redex-match Flux variableAssignment
                (term
                 (foo "=" 1)))
