@@ -6,10 +6,8 @@
 (define-language Flux
 
   (packageClause ("package" identifier))
-
   ;; File = [ PackageClause ] [ ImportList ] StatementList .
   (File (packageClause importList statementList))
-
   (importList (importDeclaration ...))
   ;; TODO ImportDeclaration = "import" [identifier] string_lit .
   (importDeclaration ("import"  string_lit))
@@ -22,6 +20,7 @@
          functionLitBlock
          ("{" statementList "}" ))
 
+  ;; Statements
   (statementList (statement ...))
   (statement optionAssignment
              builtinStatement
@@ -32,18 +31,14 @@
   ;; OptionAssignment = "option" [ identifier "." ] identifier "=" Expression .
   (optionAssignment ("option" identifier "=" expression))
 
-  ;; BuiltinStatement = "builtin" identifer ":" TypeExpression .
   (builtinStatement ("builtin" identifier ":" TypeExpression))
   ;; TypeExpression   = MonoType ["where" Constraints] .
   (TypeExpression MonoType (MonoType "where" Constraints))
-  ;; MonoType = Tvar | Basic | Array | Record | Function .
   (MonoType Tvar Basic Array Record Function)
   ;; Tvar     = "A" … "Z" .
   ;; FIXME
   (Tvar string)
-  ;; Basic    = "int" | "uint" | "float" | "string" | "bool" | "time" | "duration" | "bytes" | "regexp" .
-  (Basic "int" "uint" "float" "string" "bool" "time" "duration") ; TODO bytes and regex
-  ;; Array    = "[" MonoType "]" .
+  (Basic "int" "uint" "float" "string" "bool" "time" "duration") ; TODO "bytes" and "regex"
   (Array ("[" MonoType "]"))
   ;; Record   = ( "{" [Properties] "}" ) | ( "{" Tvar "with" Properties "}" ) .
   (Record ("{" (Properties ...) "}") ("{" Tvar "with" Properties "}") )
@@ -51,9 +46,7 @@
   (Function ("(" Parameters ")" "=>" MonoType))
   ;; Properties = Property { "," Property } .
   (Properties (Property ...))
-  ;; Property   = identifier ":" MonoType .
   (Property (Label ":" MonoType))
-  ;; Label      = identifier | string_lit
   (Label identifier stringLit)
   ;; Parameters = Parameter { "," Parameter } .
   (Parameters (Parameter ...))
@@ -63,7 +56,6 @@
              ("?" identifier ":" MonoType))
   ;; Constraints = Constraint { "," Constraint } .
   (Constraints (Constraint ...))
-  ;; Constraint  = Tvar ":" Kinds .
   (Constraint (Tvar ":" Kinds))
   ;; Kinds       = identifier { "+" identifier } .
   ;; FIXME
@@ -79,6 +71,7 @@
                      literal
                      ("(" expression ")"))
 
+  ;; TODO decide how to handle this
   ;; identifier (letter { letter | unicode_digit } .
   ;; (identifier (letter (letter ))
   (identifier variable-not-otherwise-mentioned)
@@ -117,7 +110,6 @@
   ;; date_time_lit     = date [ "T" time ] .
   ;; FIXME
   (datetimeLit (date "T" time))
-  ;; date              = year "-" month "-" day .
   (date (year "-" month "-" day))
   ;; TODO for these, maybe we can escape to Racket for a length check?
   ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
@@ -130,7 +122,7 @@
   ;; FIXME remove this hack
   (time (hour ":" minute ":" second)
         (hour ":" minute ":" second hack))
-  (hack fractionalSecond timeOffset)    ; sorry 😇
+  (hack fractionalSecond timeOffset)
   ;; hour              = decimal_digit decimal_digit .
   (hour (digit digit))
   ;; minute            = decimal_digit decimal_digit .
@@ -143,57 +135,51 @@
   (timeOffset ("Z" "+" hour ":" minute)
               ("Z" "-" hour ":" minute))
 
-  ;; RecordLiteral  = "{" RecordBody "}" .
   (recordLit ("{" recordBody "}"))
-  ;; RecordBody     = WithProperties | PropertyList .
   (recordBody withProperties propertyList)
-  ;; WithProperties = identifier "with" PropertyList .
   (withProperties (identifier "with" propertyList))
   ;; PropertyList   = [ Property { "," Property } ] .
+  ;; FIXME
   (propertyList (property ...))
   ;; Property       = identifier [ ":" Expression ]
   ;;                | string_lit ":" Expression .
+  ;; FIXME
   (property (identifier ":" expression)
             (stringLit ":" expression))
 
   (arrayLit ("[" expressionList "]"))
   (expressionList (expression ...))
 
-  ;; DictLiteral     = EmptyDict | "[" AssociativeList "]" .
   (dictLit emptyDict
            ("[" associativeList "]"))
   (emptyDict ("[" ":" "]"))
   ;; AssociativeList = Association { "," AssociativeList } .
   (associativeList (association ...))
-  ;; Association     = Expression ":" Expression .
   (association (expression ":" expression))
   
-  ;; FunctionLiteral    = FunctionParameters "=>" FunctionBody .
   (functionLit (functionParameters "=>" functionBody))
 
   ;; FunctionParameters = "(" [ ParameterList [ "," ] ] ")" .
-  ;; TODO this done definitely needs to be zero or more
+  ;; FIXME
   (functionParameters ( "(" parameterList ")" )
                       emptyParamList
                       )
   (emptyParamList "()")
 
   ;; ParameterList      = Parameter { "," Parameter } .
+  ;; TODO check me
   (parameterList (parameter ...))
 
   ;; Parameter          = identifier [ "=" Expression ] .
-  ;; TODO multiple parameters
+  ;; FIXME multiple parameters
   (parameter identifier)
 
-  ;; FunctionBody       = Expression | Block .
   (functionBody expression block)
 
-  ;; CallExpression = "(" PropertyList ")" .
   (callExpression ( "(" propertyList ")" ))
 
   (pipeReceiveLit "<-")
 
-  ;; IndexExpression = "[" Expression "]" .
   (indexExpression ("[" expression "]"))
 
   (memberExpression dotExpression memberBracketExpression)
