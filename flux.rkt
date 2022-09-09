@@ -5,6 +5,8 @@
 
 (define-language Flux
 
+  ;; Packages
+  ;; --------
   (PackageClause ("package" Identifier))
   ;; File = [ PackageClause ] [ ImportList ] StatementList .
   (File (PackageClause ImportList StatementList))
@@ -14,6 +16,7 @@
   (ImportDeclaration ("import" string_lit))
 
   ;; Blocks
+  ;; ------
   ;; See https://docs.influxdata.com/flux/v0.x/spec/blocks/
   (Block 𝒰
          PackageBlock
@@ -22,6 +25,7 @@
          ("{" StatementList "}" ))
 
   ;; Statements
+  ;; ----------
   (StatementList (Statement ...))
   (Statement OptionAssignment
              BuiltinStatement
@@ -33,7 +37,6 @@
   (OptionAssignment ("option" Identifier "=" Expression))
 
   (BuiltinStatement ("builtin" Identifier ":" TypeExpression))
-
   ;; TODO does this all belong to/in the type system?
   ;; TypeExpression   = MonoType ["where" Constraints] .
   (TypeExpression MonoType (MonoType "where" Constraints))
@@ -84,6 +87,8 @@
 
   (digit "0" "1" "2" "3" "4" "5" "6" "7" "8" "9")
 
+  ;; Literals
+  ;; --------
   (Literal IntLit
            FloatLit
            StringLit
@@ -194,6 +199,7 @@
 
 
   ;; Operators
+  ;; ---------
   (LogicalOperator "and" "or")
 
   (UnaryLogicalOperator "not" "exists")
@@ -215,8 +221,9 @@
                    IndexExpression)
 
   ;; Expressions
+  ;; -----------
   ;;
-  ;; Includes operator precedence
+  ;; (Includes operator precedence)
   (Expression ConditionalExpression)
 
   (ConditionalExpression LogicalExpression
@@ -273,15 +280,23 @@
 
   ;;   (Boolean boolean "null")
 
-  ;;   (typeConstraint addable
-  ;;                   subtractable
-  ;;                   divisable
-  ;;                   numeric
-  ;;                   comparable
-  ;;                   equatable
-  ;;                   nullable
-  ;;                   record
-  ;;                   negatable
-  ;;                   timeable
-  ;;                   stringable)
+  ;; Type constraints are a type system concept used to implement static ad hoc polymorphism.
+  ;; For example, `add = (a, b) => a + b` is a function that is defined only for `Addable` types.
+  ;; If one were to pass a record to `add` like so:
+  ;; 
+  ;;     add(a: {}, b: {})
+  ;; 
+  ;; the result would be a compile-time type error because records are not addable.
+  ;; Like types, constraints are never explicitly declared but rather inferred from the context.
+  ;;   (TypeConstraint Addable
+  ;;                   Subtractable
+  ;;                   Divisable
+  ;;                   Numeric
+  ;;                   Comparable
+  ;;                   Equatable
+  ;;                   Nullable
+  ;;                   Record
+  ;;                   Negatable
+  ;;                   Timeable
+  ;;                   Stringable)
   )
