@@ -62,14 +62,11 @@
   (FunctionTypeParameter (Identifier ":" Monotype)
                         ("<-" Identifier ":" MonoType)
                         ("?" Identifier ":" MonoType))
-  ;; Constraints = Constraint { "," Constraint } .
-  ;; FIXME
-  (Constraints (Constraint ...))
+  (Constraints (Constraint Constraint ...))
   (Constraint (Tvar ":" Kinds))
   ;; Kinds       = identifier { "+" identifier } .
-  ;; FIXME
-  (Kinds Identifier)
-
+  (Kinds (Identifier AdditionalIdentifier ...))
+  (AdditionalIdentifier ("+" Identifier))
   (VariableAssignment (Identifier "=" Expression))
 
   (ReturnStatement ("return" Expression))

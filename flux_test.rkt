@@ -55,14 +55,14 @@
               (term "time"))
 
   (test-match Flux TypeExpression
-              (term ("T1" "where" (("T1" ":" fooo)))
+              (term ("T1" "where" (("T1" ":" (fooo))))
                     ))
 
   (test-match Flux Tvar
               (term "sup"))
 
   (test-match Flux Constraint
-              (term ("T1" ":" fooo)
+              (term ("T1" ":" (fooo))
                     ))
 
   ;; Literals
@@ -81,6 +81,15 @@
 
   (test-match Flux FunctionLit
               (term ("()" "=>" 1)))
+
+(test-match Flux FunctionLit
+               (term
+                (
+                 ("(" (a b) ")")     ; FunctionParameters
+                 "=>"
+                 1                 ; FunctionBody
+                 )
+               ))
 
   (test-match Flux FunctionParameters
               (term ("(" (foo bar) ")")
@@ -122,14 +131,6 @@
 
   ;; TODO
   ;; add = (a, b) => a + b
-  (redex-match Flux FunctionLit
-               (term
-                (
-                 ("(" (a b) ")")     ; FunctionParameters
-                 "=>"
-                 1                 ; FunctionBody
-                 )
-               ))
 
   ;; TODO constraints. This should fail:
   ;;     add(a: {}, b: {})
