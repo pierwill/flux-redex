@@ -33,13 +33,11 @@
              ReturnStatement
              ExpressionStatement)
 
-  ;; OptionAssignment = "option" [ identifier "." ] identifier "=" Expression .
   (OptionAssignment ("option" OptionPath "=" Expression))
   (OptionPath Identifier (Identifier "." Identifier))
 
   (BuiltinStatement ("builtin" Identifier ":" TypeExpression))
   ;; TODO does this all belong to/in the type system?
-  ;; TypeExpression   = MonoType ["where" Constraints] .
   (TypeExpression MonoType (MonoType "where" Constraints))
   (MonoType Tvar BasicType ArrayType RecordType FunctionType)
   ;; Tvar     = "A" ... "Z" .
@@ -49,22 +47,21 @@
   (ArrayType ("[" MonoType "]"))
   ;; Record   = ( "{" [Properties] "}" ) | ( "{" Tvar "with" Properties "}" ) .
   ;; FIXME
-  (RecordType ("{" (RecordTypeProperties ...) "}") ("{" Tvar "with" RecordTypeProperties "}") )
-  ;; Function = "(" [Parameters] ")" "=>" MonoType .
-  ;; FIXME
-  (FunctionType ("(" FunctionTypeParameters ")" "=>" MonoType))
-  ;; Properties = Property { "," Property } .
-  (RecordTypeProperties (RecordTypeProperty ...))
+  (RecordType ("{" (RecordTypeProperties ...) "}")
+              ("{" Tvar "with" RecordTypeProperties "}"))
+  (FunctionType ("(" ")" "=>" MonoType)
+                ("(" FunctionTypeParameters ")" "=>" MonoType))
+  (RecordTypeProperties (RecordTypeProperty RecordTypeProperty ...))
   (RecordTypeProperty (Label ":" MonoType))
   (Label Identifier StringLit)
-  ;; Parameters = Parameter { "," Parameter } .
-  (FunctionTypeParameters (FunctionTypeParameter ...))
+  (FunctionTypeParameters (FunctionTypeParameter FunctionTypeParameter ...))
   (FunctionTypeParameter (Identifier ":" Monotype)
                         ("<-" Identifier ":" MonoType)
                         ("?" Identifier ":" MonoType))
   (Constraints (Constraint Constraint ...))
   (Constraint (Tvar ":" Kinds))
   ;; Kinds       = identifier { "+" identifier } .
+  ;; TODO To "+" or not to "+"? That is the question.
   (Kinds (Identifier AdditionalIdentifier ...))
   (AdditionalIdentifier ("+" Identifier))
   (VariableAssignment (Identifier "=" Expression))
