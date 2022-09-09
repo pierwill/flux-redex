@@ -107,11 +107,38 @@
   ;; TODO maybe?
   ;; (regexLit)
 
-  (durationLit (intLit durationUnit))
+  (durationLit (durationMagnitude durationUnit))
+  (durationMagnitude integer)
   (durationUnit "y" "mo" "w" "d" "h" "m" "s" "ms" "us" "μs" "ns")
 
   ;; date_time_lit     = date [ "T" time ] .
+  ;; FIXME
   (datetimeLit (date "T" time))
+  ;; date              = year "-" month "-" day .
+  (date (year "-" month "-" day))
+  ;; TODO for these, maybe we can escape to Racket for a length check?
+  ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
+  (year (digit digit digit digit))
+  ;; month             = decimal_digit decimal_digit .
+  (month (digit digit))
+  ;; day               = decimal_digit decimal_digit .
+  (day (digit digit))
+  ;; time              = hour ":" minute ":" second [ fractional_second ] [ time_offset ] .
+  ;; FIXME remove this hack
+  (time (hour ":" minute ":" second)
+        (hour ":" minute ":" second hack))
+  (hack fractionalSecond timeOffset)    ; sorry 😇
+  ;; hour              = decimal_digit decimal_digit .
+  (hour (digit digit))
+  ;; minute            = decimal_digit decimal_digit .
+  (minute (digit digit))
+  ;; second            = decimal_digit decimal_digit .
+  (second (digit digit))
+  ;; fractional_second = "."  { decimal_digit } .
+  (fractionalSecond ("." digit))
+  ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
+  (timeOffset ("Z" "+" hour ":" minute)
+              ("Z" "-" hour ":" minute))
 
   ;; RecordLiteral  = "{" RecordBody "}" .
   (recordLit ("{" recordBody "}"))
@@ -170,31 +197,6 @@
   (dotExpression ("." identifier))
   (memberBracketExpression ("[" stringLit "]"))
 
-  ;; 
-  ;; date              = year "-" month "-" day .
-  (date (year "-" month "-" day))
-  ;; TODO for these, maybe we can escape to Racket for a length check?
-  ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
-  (year (digit digit digit digit))
-  ;; month             = decimal_digit decimal_digit .
-  (month (digit digit))
-  ;; day               = decimal_digit decimal_digit .
-  (day (digit digit))
-  ;; time              = hour ":" minute ":" second [ fractional_second ] [ time_offset ] .
-  ;; TODO fractionalSecond
-  (time (hour ":" minute ":" second)
-        (hour ":" minute ":" second timeOffset))
-  ;; hour              = decimal_digit decimal_digit .
-  (hour (digit digit))
-  ;; minute            = decimal_digit decimal_digit .
-  (minute (digit digit))
-  ;; second            = decimal_digit decimal_digit .
-  (second (digit digit))
-  ;; fractional_second = "."  { decimal_digit } .
-  (fractionalSecond ("." digit))
-  ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
-  (timeOffset ("Z" "+" hour ":" minute)
-              ("Z" "-" hour ":" minute))
 
   ;; Operators
   (LogicalOperator "and" "or")
