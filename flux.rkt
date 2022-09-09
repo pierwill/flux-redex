@@ -41,26 +41,25 @@
   ;; TODO does this all belong to/in the type system?
   ;; TypeExpression   = MonoType ["where" Constraints] .
   (TypeExpression MonoType (MonoType "where" Constraints))
-  (MonoType Tvar Basic Array Record Function)
+  (MonoType Tvar BasicType ArrayType RecordType FunctionType)
   ;; Tvar     = "A" ... "Z" .
   ;; FIXME
   (Tvar string)
-  (Basic "int" "uint" "float" "string" "bool" "time" "duration") ; TODO "bytes" and "regex"
-  (Array ("[" MonoType "]"))
+  (BasicType "int" "uint" "float" "string" "bool" "time" "duration") ; TODO "bytes" and "regex"
+  (ArrayType ("[" MonoType "]"))
   ;; Record   = ( "{" [Properties] "}" ) | ( "{" Tvar "with" Properties "}" ) .
   ;; FIXME
-  (Record ("{" (Properties ...) "}") ("{" Tvar "with" Properties "}") )
+  (RecordType ("{" (RecordTypeProperties ...) "}") ("{" Tvar "with" RecordTypeProperties "}") )
   ;; Function = "(" [Parameters] ")" "=>" MonoType .
   ;; FIXME
-  (Function ("(" Parameters ")" "=>" MonoType))
+  (FunctionType ("(" FunctionTypeParameters ")" "=>" MonoType))
   ;; Properties = Property { "," Property } .
-  (Properties (Property-in-builtin ...))
-  ;; TODO defining property twice?
-  (Property-in-builtin (Label ":" MonoType))
+  (RecordTypeProperties (RecordTypeProperty ...))
+  (RecordTypeProperty (Label ":" MonoType))
   (Label Identifier StringLit)
   ;; Parameters = Parameter { "," Parameter } .
-  (Parameters (Parameter-in-builtin ...))
-  (Parameter-in-builtin (Identifier ":" Monotype)
+  (FunctionTypeParameters (FunctionTypeParameter ...))
+  (FunctionTypeParameter (Identifier ":" Monotype)
                         ("<-" Identifier ":" MonoType)
                         ("?" Identifier ":" MonoType))
   ;; Constraints = Constraint { "," Constraint } .
