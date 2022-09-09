@@ -91,6 +91,9 @@
                (term (a "+" b)
                      ))
 
+  (test-match Flux ConditionalExpression
+               (term ("if" a "then" b "else" c)
+                     ))
   ;; TODO
   ;; (test-match Flux Expression
   ;;              (term (a "+" b)
