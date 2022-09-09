@@ -14,6 +14,7 @@
   ;; TODO ImportDeclaration = "import" [identifier] string_lit .
   (importDeclaration ("import"  string_lit))
 
+  ;; Blocks
   ;; See https://docs.influxdata.com/flux/v0.x/spec/blocks/
   (block 𝒰
          packageBlock
@@ -38,7 +39,8 @@
   ;; MonoType = Tvar | Basic | Array | Record | Function .
   (MonoType Tvar Basic Array Record Function)
   ;; Tvar     = "A" … "Z" .
-  (Tvar string)                         ;fixme
+  ;; FIXME
+  (Tvar string)
   ;; Basic    = "int" | "uint" | "float" | "string" | "bool" | "time" | "duration" | "bytes" | "regexp" .
   (Basic "int" "uint" "float" "string" "bool" "time" "duration") ; TODO bytes and regex
   ;; Array    = "[" MonoType "]" .
@@ -94,6 +96,10 @@
 
   (intLit integer)
 
+  ;; TODO digits?
+  ;; float_lit = decimals "." [ decimals ]
+  ;;     | "." decimals .
+  ;; decimals  = decimal_digit { decimal_digit } .
   (floatLit real)
 
   (stringLit string)
@@ -175,7 +181,9 @@
   ;; day               = decimal_digit decimal_digit .
   (day (digit digit))
   ;; time              = hour ":" minute ":" second [ fractional_second ] [ time_offset ] .
-  (time (hour ":" minute ":" second))
+  ;; TODO fractionalSecond
+  (time (hour ":" minute ":" second)
+        (hour ":" minute ":" second timeOffset))
   ;; hour              = decimal_digit decimal_digit .
   (hour (digit digit))
   ;; minute            = decimal_digit decimal_digit .
@@ -183,9 +191,10 @@
   ;; second            = decimal_digit decimal_digit .
   (second (digit digit))
   ;; fractional_second = "."  { decimal_digit } .
-  ;; (fractionalSecond ("." digit))
+  (fractionalSecond ("." digit))
   ;; time_offset       = "Z" | ("+" | "-" ) hour ":" minute .
-  ;; (timeOffset ())
+  (timeOffset ("Z" "+" hour ":" minute)
+              ("Z" "-" hour ":" minute))
 
   ;; Operators
   (LogicalOperator "and" "or")
@@ -253,15 +262,11 @@
   ;; (type "null"
   ;;       Boolean
   ;;       integer ;; uint | int | float
-
   ;;       Time
   ;;       duration
-
   ;;       string
-
   ;;       ;; bytes
   ;;       ;; regex
-
   ;;       array
   ;;       record
   ;;       dictionary
