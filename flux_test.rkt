@@ -5,6 +5,9 @@
 
 (module+ test
 
+  (test-match Flux Identifier
+              (term deadfeed))
+
   ;; Packages
   ;; --------
   (test-match Flux PackageClause
@@ -55,6 +58,37 @@
               (term ("T1" "where" (("T1" ":" fooo)))
                     ))
 
+  (test-match Flux Tvar
+              (term "sup"))
+
+  (test-match Flux Constraint
+              (term ("T1" ":" fooo)
+                    ))
+
+  ;; Literals
+  ;; --------
+
+  (test-match Flux RecordLit
+              (term (
+                     "{"
+                     ((sup ":" 1))
+                     "}"
+                     )
+                    ))
+
+  (test-match Flux Property
+              (term (sup ":" 1)))
+
+  (test-match Flux FunctionLit
+              (term ("()" "=>" 1)))
+
+  (test-match Flux FunctionParameters
+              (term ("(" (foo bar) ")")
+                    ))
+
+  ;; Expressions
+  ;; -----------
+
   (test-match Flux PrimaryExpression
               (term (1 "w")))
 
@@ -63,46 +97,12 @@
                ("(" (1 "w") ")" )
                ))
 
-  ;; Literals
-  ;; --------
-
-    (test-match Flux RecordLit
-              (term (
-                     "{"
-                     ((sup ":" 1))
-                     "}"
-                     )
-                    ))
-
-  (test-match Flux FunctionLit
-              (term ("()" "=>" 1)))
-
-  (test-match Flux Property
-              (term (sup ":" 1)))
-
-  (test-match Flux Tvar
-              (term "sup"))
-
-  (test-match Flux Identifier
-              (term deadfeed))
-
-  (test-match Flux Constraint
-              (term ("T1" ":" fooo)
-                    ))
-
-  ;; Expressions
-  ;; -----------
-
   (test-match Flux CallExpression
               (term (
                      "("
-                     ((sup ":" 1))      ; PropertyList
+                     ((sup ":" 1)) ; PropertyList
                      ")"
                      )
-                    ))
-
-  (test-match Flux FunctionParameters
-              (term ("(" (foo bar) ")")
                     ))
 
   (test-match Flux AdditiveExpression
@@ -112,7 +112,7 @@
   (test-match Flux ConditionalExpression
               (term ("if" a "then" b "else" c)
                     ))
-  ;; TODO
+  ;; TODO bug?
   ;; (test-match Flux Expression
   ;;              (term (a "+" b)
   ;;                    ))
@@ -122,14 +122,14 @@
 
   ;; TODO
   ;; add = (a, b) => a + b
-  ;; (redex-match Flux FunctionLit
-  ;;              (term
-  ;;               (
-  ;;                ("(" (a b) ")")     ; FunctionParameters
-  ;;                "=>"
-  ;;                (a "+" b)                 ; FunctionBody
-  ;;                )
-  ;;              ))
+  (redex-match Flux FunctionLit
+               (term
+                (
+                 ("(" (a b) ")")     ; FunctionParameters
+                 "=>"
+                 1                 ; FunctionBody
+                 )
+               ))
 
   ;; TODO constraints. This should fail:
   ;;     add(a: {}, b: {})
