@@ -242,7 +242,6 @@
                       (AdditiveExpression AdditiveOperator MultiplicativeExpression))
 
   (MultiplicativeExpression ExponentExpression
-                            (ExponentExpression ExponentOperator MultiplicativeExpression)
                             (ExponentExpression MultiplicativeOperator MultiplicativeExpression))
 
   (ExponentExpression PipeExpression
