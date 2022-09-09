@@ -86,6 +86,10 @@
   ;; TODO
   ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
 
+  (test-match Flux FunctionParameters
+              (term ("(" (foo bar) ")")
+                    ))
+
   ;; TODO constraints. This should fail:
   ;;     add(a: {}, b: {})
   ;; See spec example.
