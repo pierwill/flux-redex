@@ -8,13 +8,12 @@
   (packageClause ("package" identifier))
 
   ;; File = [ PackageClause ] [ ImportList ] StatementList .
-  (file (packageClause importList statementList))
+  (File (packageClause importList statementList))
 
   (importList (importDeclaration ...))
   ;; TODO ImportDeclaration = "import" [identifier] string_lit .
   (importDeclaration ("import"  string_lit))
 
-  
   ;; In addition to explicit blocks in the source code, there are implicit blocks:
   ;;
   ;;   - The universe block encompasses all Flux source text.
@@ -25,8 +24,8 @@
   ;; Blocks nest and influence scoping.
   ;; https://docs.influxdata.com/flux/v0.x/spec/blocks/
   (block ("{" statementList "}" ))
-  (statementList (statement ...))
 
+  (statementList (statement ...))
   (statement optionAssignment
              builtinStatement
              variableAssignment
@@ -36,7 +35,6 @@
   ;; OptionAssignment = "option" [ identifier "." ] identifier "=" Expression .
   (optionAssignment ("option" identifier "=" expression))
 
-  ;; BEGIN builtin
   ;; BuiltinStatement = "builtin" identifer ":" TypeExpression .
   (builtinStatement ("builtin" identifier ":" TypeExpression))
   ;; TypeExpression   = MonoType ["where" Constraints] .
@@ -53,12 +51,10 @@
   (Record ("{" (Properties ...) "}") ("{" Tvar "with" Properties "}") )
   ;; Function = "(" [Parameters] ")" "=>" MonoType .
   (Function ("(" Parameters ")" "=>" MonoType))
-  
   ;; Properties = Property { "," Property } .
   (Properties (Property ...))
   ;; Property   = identifier ":" MonoType .
   (Property (identifer ":" MonoType))
-  
   ;; Parameters = Parameter { "," Parameter } .
   (Parameters (Parameter ...))
   ;; Parameter  = [ "<-" | "?" ] identifier ":" MonoType .
@@ -70,7 +66,6 @@
   (Constraint (Tvar ":" Kinds))
   ;; Kinds       = identifier { "+" identifier } .
   (Kinds identifer)                     ;FIXME
-  ;; END builtin
   
   (variableAssignment (identifier "=" expression))
 
@@ -94,7 +89,7 @@
            ;; regexLit
            durationLit
            datetimeLit
-           ;; pipeReceiveLit
+           pipeReceiveLit
            recordLit
            arrayLit
            dictLit
@@ -253,29 +248,29 @@
                      (PostfixExpression PostfixOperator))
 
   ;; ;; A type defines the set of values and operations on those values.
-  ;;   ;; Types are never explicitly declared as part of the syntax except as part of a builtin statement.
-  ;;   ;; Types are always inferred from the usage of the value.
-  ;;   ;; Type inference follows a Hindley-Milner style inference system.
-  ;;   ;;
-  ;;   ;; TODO union types? https://docs.influxdata.com/flux/v0.x/spec/types/#union-types
-  ;;   (type "null"
-  ;;         Boolean
-  ;;         integer ;; uint | int | float
+  ;; ;; Types are never explicitly declared as part of the syntax except as part of a builtin statement.
+  ;; ;; Types are always inferred from the usage of the value.
+  ;; ;; Type inference follows a Hindley-Milner style inference system.
+  ;; ;;
+  ;; ;; TODO union types? https://docs.influxdata.com/flux/v0.x/spec/types/#union-types
+  ;; (type "null"
+  ;;       Boolean
+  ;;       integer ;; uint | int | float
 
-  ;;         Time
-  ;;         duration
+  ;;       Time
+  ;;       duration
 
-  ;;         string
+  ;;       string
 
-  ;;         ;; bytes
-  ;;         ;; regex
+  ;;       ;; bytes
+  ;;       ;; regex
 
-  ;;         array
-  ;;         record
-  ;;         dictionary
-  ;;         function
-  ;;         generator
-  ;;         )
+  ;;       array
+  ;;       record
+  ;;       dictionary
+  ;;       function
+  ;;       generator
+  ;;       )
 
   ;;   (Boolean boolean "null")
 
