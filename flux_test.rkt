@@ -75,6 +75,14 @@
                      )
                 ))
 
+  (test-match Flux CallExpression
+              (term (
+                     "("
+                     ((sup ":" 1))      ; PropertyList
+                     ")"
+                     )
+                    ))
+
   ;; TODO
   ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
 
