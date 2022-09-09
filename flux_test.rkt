@@ -25,8 +25,9 @@
                       "="
                       ( "()" "=>" 1))))
 
-  ;; ;; function definition
-  ;; (redex-match Flux callExpression
-  ;;              (term (sup "(" a ")" )))
+  (redex-match Flux property
+               (term (sup ":" 1)))
 
+  (redex-match Flux callExpression
+               (term ("(" ((sup ":" 1)) ")")))
   )
