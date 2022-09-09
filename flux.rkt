@@ -52,7 +52,9 @@
   ;; Properties = Property { "," Property } .
   (Properties (Property ...))
   ;; Property   = identifier ":" MonoType .
-  (Property (identifer ":" MonoType))
+  (Property (Label ":" MonoType))
+  ;; Label      = identifier | string_lit
+  (Label identifier stringLit)
   ;; Parameters = Parameter { "," Parameter } .
   (Parameters (Parameter ...))
   ;; Parameter  = [ "<-" | "?" ] identifier ":" MonoType .
