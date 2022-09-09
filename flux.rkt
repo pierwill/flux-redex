@@ -33,6 +33,8 @@
   (OptionAssignment ("option" Identifier "=" Expression))
 
   (BuiltinStatement ("builtin" Identifier ":" TypeExpression))
+
+  ;; TODO does this all belong to/in the type system?
   ;; TypeExpression   = MonoType ["where" Constraints] .
   (TypeExpression MonoType (MonoType "where" Constraints))
   (MonoType Tvar Basic Array Record Function)
@@ -42,8 +44,10 @@
   (Basic "int" "uint" "float" "string" "bool" "time" "duration") ; TODO "bytes" and "regex"
   (Array ("[" MonoType "]"))
   ;; Record   = ( "{" [Properties] "}" ) | ( "{" Tvar "with" Properties "}" ) .
+  ;; FIXME
   (Record ("{" (Properties ...) "}") ("{" Tvar "with" Properties "}") )
   ;; Function = "(" [Parameters] ")" "=>" MonoType .
+  ;; FIXME
   (Function ("(" Parameters ")" "=>" MonoType))
   ;; Properties = Property { "," Property } .
   (Properties (Property-in-builtin ...))
@@ -152,41 +156,41 @@
   (ArrayLit ("[" expressionList "]"))
   (expressionList (Expression ...))
 
-  (DictLit emptyDict
-           ("[" associativeList "]"))
-  (emptyDict ("[" ":" "]"))
+  (DictLit EmptyDict
+           ("[" AssociativeList "]"))
+  (EmptyDict ("[" ":" "]"))
   ;; AssociativeList = Association { "," AssociativeList } .
-  (associativeList (association ...))
-  (association (Expression ":" Expression))
+  (AssociativeList (Association ...))
+  (Association (Expression ":" Expression))
   
-  (FunctionLit (functionParameters "=>" functionBody))
+  (FunctionLit (FunctionParameters "=>" FunctionBody))
 
   ;; FunctionParameters = "(" [ ParameterList [ "," ] ] ")" .
   ;; FIXME
-  (functionParameters ( "(" parameterList ")" )
+  (FunctionParameters ( "(" ParameterList ")" )
                       emptyParamList
                       )
   (emptyParamList "()")
 
   ;; ParameterList      = Parameter { "," Parameter } .
   ;; TODO check me
-  (parameterList (parameter ...))
+  (ParameterList (Parameter ...))
 
   ;; Parameter          = identifier [ "=" Expression ] .
   ;; FIXME multiple parameters
-  (parameter Identifier)
+  (Parameter Identifier)
 
-  (functionBody Expression Block)
+  (FunctionBody Expression Block)
 
   (CallExpression ( "(" PropertyList ")" ))
 
   (PipeReceiveLit "<-")
 
-  (indexExpression ("[" Expression "]"))
+  (IndexExpression ("[" Expression "]"))
 
-  (memberExpression dotExpression memberBracketExpression)
-  (dotExpression ("." Identifier))
-  (memberBracketExpression ("[" StringLit "]"))
+  (MemberExpression DotExpression MemberBracketExpression)
+  (DotExpression ("." Identifier))
+  (MemberBracketExpression ("[" StringLit "]"))
 
 
   ;; Operators
@@ -206,9 +210,9 @@
   
   (PrefixOperator "+" "-")
 
-  (PostfixOperator memberExpression
+  (PostfixOperator MemberExpression
                    CallExpression
-                   indexExpression)
+                   IndexExpression)
 
   ;; Expressions
   ;;
