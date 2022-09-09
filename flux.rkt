@@ -14,16 +14,12 @@
   ;; TODO ImportDeclaration = "import" [identifier] string_lit .
   (importDeclaration ("import"  string_lit))
 
-  ;; In addition to explicit blocks in the source code, there are implicit blocks:
-  ;;
-  ;;   - The universe block encompasses all Flux source text.
-  ;;   - Each package has a package block containing all Flux source text for that package.
-  ;;   - Each file has a file block containing all Flux source text in that file.
-  ;;   - Each function literal has its own function block even if not explicitly declared.
-  ;;
-  ;; Blocks nest and influence scoping.
-  ;; https://docs.influxdata.com/flux/v0.x/spec/blocks/
-  (block ("{" statementList "}" ))
+  ;; See https://docs.influxdata.com/flux/v0.x/spec/blocks/
+  (block 𝒰
+         packageBlock
+         fileBlock
+         functionLitBlock
+         ("{" statementList "}" ))
 
   (statementList (statement ...))
   (statement optionAssignment
@@ -65,7 +61,8 @@
   ;; Constraint  = Tvar ":" Kinds .
   (Constraint (Tvar ":" Kinds))
   ;; Kinds       = identifier { "+" identifier } .
-  (Kinds identifer)                     ;FIXME
+  ;; FIXME
+  (Kinds identifer)
   
   (variableAssignment (identifier "=" expression))
 
