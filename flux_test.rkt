@@ -5,7 +5,7 @@
 
 (module+ test
 
-  (test-match Flux block
+  (test-match Flux Block
                (term 𝒰))
 
   (test-match Flux primaryExpression
@@ -39,7 +39,7 @@
   (test-match Flux Tvar
               (term "sup"))
 
-  (test-match Flux identifier
+  (test-match Flux Identifier
               (term deadfeed))
 
   (test-match Flux Constraint

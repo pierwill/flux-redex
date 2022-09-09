@@ -5,33 +5,34 @@
 
 (define-language Flux
 
-  (packageClause ("package" identifier))
+  (PackageClause ("package" Identifier))
   ;; File = [ PackageClause ] [ ImportList ] StatementList .
-  (File (packageClause importList statementList))
-  (importList (importDeclaration ...))
-  ;; TODO ImportDeclaration = "import" [identifier] string_lit .
-  (importDeclaration ("import"  string_lit))
+  (File (PackageClause ImportList StatementList))
+  (ImportList (ImportDeclaration ...))
+  ;; ImportDeclaration = "import" [identifier] string_lit .
+  ;; FIXME
+  (ImportDeclaration ("import" string_lit))
 
   ;; Blocks
   ;; See https://docs.influxdata.com/flux/v0.x/spec/blocks/
-  (block 𝒰
-         packageBlock
-         fileBlock
-         functionLitBlock
-         ("{" statementList "}" ))
+  (Block 𝒰
+         PackageBlock
+         FileBlock
+         FunctionLitBlock
+         ("{" StatementList "}" ))
 
   ;; Statements
-  (statementList (statement ...))
-  (statement optionAssignment
+  (StatementList (Statement ...))
+  (Statement optionAssignment
              builtinStatement
              variableAssignment
              returnStatement
              expressionStatement)
 
   ;; OptionAssignment = "option" [ identifier "." ] identifier "=" Expression .
-  (optionAssignment ("option" identifier "=" expression))
+  (optionAssignment ("option" Identifier "=" expression))
 
-  (builtinStatement ("builtin" identifier ":" TypeExpression))
+  (builtinStatement ("builtin" Identifier ":" TypeExpression))
   ;; TypeExpression   = MonoType ["where" Constraints] .
   (TypeExpression MonoType (MonoType "where" Constraints))
   (MonoType Tvar Basic Array Record Function)
@@ -47,34 +48,34 @@
   ;; Properties = Property { "," Property } .
   (Properties (Property ...))
   (Property (Label ":" MonoType))
-  (Label identifier stringLit)
+  (Label Identifier stringLit)
   ;; Parameters = Parameter { "," Parameter } .
   (Parameters (Parameter ...))
   ;; Parameter  = [ "<-" | "?" ] identifier ":" MonoType .
   ;; FIXME
-  (Parameter ("<-" identifier ":" MonoType)
-             ("?" identifier ":" MonoType))
+  (Parameter ("<-" Identifier ":" MonoType)
+             ("?" Identifier ":" MonoType))
   ;; Constraints = Constraint { "," Constraint } .
   (Constraints (Constraint ...))
   (Constraint (Tvar ":" Kinds))
   ;; Kinds       = identifier { "+" identifier } .
   ;; FIXME
-  (Kinds identifier)
+  (Kinds Identifier)
   
-  (variableAssignment (identifier "=" expression))
+  (variableAssignment (Identifier "=" expression))
 
   (returnStatement ("return" expression))
 
   (expressionStatement expression)
 
-  (primaryExpression identifier
+  (primaryExpression Identifier
                      literal
                      ("(" expression ")"))
 
   ;; TODO decide how to handle this
   ;; identifier (letter { letter | unicode_digit } .
   ;; (identifier (letter (letter ))
-  (identifier variable-not-otherwise-mentioned)
+  (Identifier variable-not-otherwise-mentioned)
 
   (digit "0" "1" "2" "3" "4" "5" "6" "7" "8" "9")
 
@@ -137,14 +138,14 @@
 
   (recordLit ("{" recordBody "}"))
   (recordBody withProperties propertyList)
-  (withProperties (identifier "with" propertyList))
+  (withProperties (Identifier "with" propertyList))
   ;; PropertyList   = [ Property { "," Property } ] .
   ;; FIXME
   (propertyList (property ...))
   ;; Property       = identifier [ ":" Expression ]
   ;;                | string_lit ":" Expression .
   ;; FIXME
-  (property (identifier ":" expression)
+  (property (Identifier ":" expression)
             (stringLit ":" expression))
 
   (arrayLit ("[" expressionList "]"))
@@ -172,9 +173,9 @@
 
   ;; Parameter          = identifier [ "=" Expression ] .
   ;; FIXME multiple parameters
-  (parameter identifier)
+  (parameter Identifier)
 
-  (functionBody expression block)
+  (functionBody expression Block)
 
   (callExpression ( "(" propertyList ")" ))
 
@@ -183,7 +184,7 @@
   (indexExpression ("[" expression "]"))
 
   (memberExpression dotExpression memberBracketExpression)
-  (dotExpression ("." identifier))
+  (dotExpression ("." Identifier))
   (memberBracketExpression ("[" stringLit "]"))
 
 
