@@ -116,6 +116,30 @@
               (term ((foo "=" baz) (bar "=" true))
                     ))
 
+
+  ;; TIME
+  ;; ----
+  (define eleven (term ("1" "1")))
+  (define y2k (term ("2" "0" "0" "0")))
+  (define test_time (term (,eleven ":" ,eleven ":" ,eleven)))
+  (define test_frac_s (term ("." ("1"))))
+  
+  (test-match Flux date (term (,y2k "-" ,eleven "-" ,eleven)))
+  (test-match Flux year y2k)
+  (test-match Flux month eleven)
+  (test-match Flux day eleven)
+  (test-match Flux time test_time)
+  ;; (test-match Flux time (term (,test_time ,test_frac_s)))
+  ;; (test-match Flux time (term (,test_time "Z")))
+  ;; (test-match Flux time (term (,test_time ,timeOffset)))
+  (test-match Flux hour eleven)
+  (test-match Flux minute eleven)
+  (test-match Flux second eleven)
+  (test-match Flux fractionalSecond test_frac_s)
+  (test-match Flux timeOffset "Z")
+  (test-match Flux timeOffset (term ("+" ,eleven ":" ,eleven)))
+  (test-match Flux timeOffset (term ("-" ,eleven ":" ,eleven)))
+  
   ;; Expressions
   ;; -----------
 
