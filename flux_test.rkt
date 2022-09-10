@@ -67,7 +67,10 @@
 
   ;; Literals
   ;; --------
-
+  (test-match Flux decimals (term ("0")))
+  (test-match Flux decimals (term ("0" "1")))
+  (test-match Flux FloatLit (term (("0") ".")))
+  
   (test-match Flux RecordLit
               (term (
                      "{"

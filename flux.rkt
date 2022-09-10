@@ -79,7 +79,7 @@
   ;; (identifier (letter (letter ))
   (Identifier variable-not-otherwise-mentioned)
 
-  (digit "0" "1" "2" "3" "4" "5" "6" "7" "8" "9")
+  (decimalDigit "0" "1" "2" "3" "4" "5" "6" "7" "8" "9")
 
   ;; Literals
   ;; --------
@@ -97,12 +97,9 @@
 
   (IntLit integer)
 
-  ;; TODO digits?
-  ;; float_lit = decimals "." [ decimals ]
-  ;;     | "." decimals .
-  ;; decimals  = decimal_digit { decimal_digit } .
-  (FloatLit real)
-
+  (FloatLit (decimals ".") (decimals "." decimals) ("." decimals))
+  (decimals (decimalDigit decimalDigit ...))
+  
   (StringLit string)
 
   ;; TODO maybe?
@@ -115,20 +112,18 @@
   ;; TODO review all of these
   (DateTimeLit date (date "T" time))
   (date (year "-" month "-" day))
-  (year (digit digit digit digit))
-  (month (digit digit))
-  (day (digit digit))
+  (year (decimalDigit decimalDigit decimalDigit decimalDigit))
+  (month (decimalDigit decimalDigit))
+  (day (decimalDigit decimalDigit))
   (time (hour ":" minute ":" second)
         (hour ":" minute ":" second fractionalSecond)
         (hour ":" minute ":" second timeOffset)
         (hour ":" minute ":" second fractionalSecond timeOffset))
-  (hour (digit digit))
-  (minute (digit digit))
-  (second (digit digit))
-  (fractionalSecond ("." (digit ...)))
-  (timeOffset "Z"
-              ("+" hour ":" minute)
-              ("-" hour ":" minute))
+  (hour (decimalDigit decimalDigit))
+  (minute (decimalDigit decimalDigit))
+  (second (decimalDigit decimalDigit))
+  (fractionalSecond ("." (decimalDigit ...)))
+  (timeOffset "Z" ("+" hour ":" minute) ("-" hour ":" minute))
 
   (RecordLit ("{" RecordBody "}"))
   (RecordBody WithProperties PropertyList)
