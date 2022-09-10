@@ -244,47 +244,5 @@
 
   (PostfixExpression PrimaryExpression
                      (PostfixExpression PostfixOperator))
-
-  ;; ;; A type defines the set of values and operations on those values.
-  ;; ;; Types are never explicitly declared as part of the syntax except as part of a builtin statement.
-  ;; ;; Types are always inferred from the usage of the value.
-  ;; ;; Type inference follows a Hindley-Milner style inference system.
-  ;; ;;
-  ;; ;; TODO union types? https://docs.influxdata.com/flux/v0.x/spec/types/#union-types
-  ;; (type "null"
-  ;;       Boolean
-  ;;       integer ;; uint | int | float
-  ;;       Time
-  ;;       duration
-  ;;       string
-  ;;       ;; bytes
-  ;;       ;; regex
-  ;;       array
-  ;;       record
-  ;;       dictionary
-  ;;       function
-  ;;       generator
-  ;;       )
-
-  ;;   (Boolean boolean "null")
-
-  ;; Type constraints are a type system concept used to implement static ad hoc polymorphism.
-  ;; For example, `add = (a, b) => a + b` is a function that is defined only for `Addable` types.
-  ;; If one were to pass a record to `add` like so:
-  ;;
-  ;;     add(a: {}, b: {})
-  ;;
-  ;; the result would be a compile-time type error because records are not addable.
-  ;; Like types, constraints are never explicitly declared but rather inferred from the context.
-  ;;   (TypeConstraint Addable
-  ;;                   Subtractable
-  ;;                   Divisable
-  ;;                   Numeric
-  ;;                   Comparable
-  ;;                   Equatable
-  ;;                   Nullable
-  ;;                   Record
-  ;;                   Negatable
-  ;;                   Timeable
-  ;;                   Stringable)
+  ;; 
   )
