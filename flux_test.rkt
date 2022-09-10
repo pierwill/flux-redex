@@ -85,13 +85,13 @@
   (test-match Flux FunctionLit
               (term ("()" "=>" 1)))
 
-(test-match Flux FunctionLit
-               (term
-                (
-                 ("(" (a b) ")")     ; FunctionParameters
-                 "=>"
-                 1                 ; FunctionBody
-                 )
+  (test-match Flux FunctionLit
+              (term
+               (
+                ("(" (a b) ")")     ; FunctionParameters
+                "=>"
+                1                 ; FunctionBody
+                )
                ))
 
   (test-match Flux FunctionParameters

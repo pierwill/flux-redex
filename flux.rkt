@@ -112,29 +112,20 @@
   (durationMagnitude integer)
   (DurationUnit "y" "mo" "w" "d" "h" "m" "s" "ms" "us" "μs" "ns")
 
-  ;; FIXME
+  ;; TODO review all of these
   (DateTimeLit date (date "T" time))
   (date (year "-" month "-" day))
-  ;; TODO for these, maybe we can escape to Racket for a length check?
-  ;; year              = decimal_digit decimal_digit decimal_digit decimal_digit .
   (year (digit digit digit digit))
-  ;; month             = decimal_digit decimal_digit .
   (month (digit digit))
-  ;; day               = decimal_digit decimal_digit .
   (day (digit digit))
-  ;; time              = hour ":" minute ":" second [ fractional_second ] [ time_offset ] .
-  ;; FIXME remove this hack
   (time (hour ":" minute ":" second)
-        (hour ":" minute ":" second hack))
-  (hack fractionalSecond timeOffset)
-  ;; hour              = decimal_digit decimal_digit .
+        (hour ":" minute ":" second fractionalSecond)
+        (hour ":" minute ":" second timeOffset)
+        (hour ":" minute ":" second fractionalSecond timeOffset))
   (hour (digit digit))
-  ;; minute            = decimal_digit decimal_digit .
   (minute (digit digit))
-  ;; second            = decimal_digit decimal_digit .
   (second (digit digit))
-  ;; fractional_second = "."  { decimal_digit } .
-  (fractionalSecond ("." digit))
+  (fractionalSecond ("." (digit ...)))
   (timeOffset "Z"
               ("+" hour ":" minute)
               ("-" hour ":" minute))
