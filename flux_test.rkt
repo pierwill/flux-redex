@@ -79,6 +79,9 @@
   (test-match Flux Property
               (term (sup ":" 1)))
 
+  (test-match Flux PropertyList
+              '())
+  
   (test-match Flux FunctionLit
               (term ("()" "=>" 1)))
 

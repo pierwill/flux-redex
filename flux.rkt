@@ -142,8 +142,6 @@
   (RecordLit ("{" RecordBody "}"))
   (RecordBody WithProperties PropertyList)
   (WithProperties (Identifier "with" PropertyList))
-  ;; PropertyList   = [ Property { "," Property } ] .
-  ;; FIXME could be empty?
   (PropertyList (Property ...))
   ;; Property       = identifier [ ":" Expression ]
   ;;                | string_lit ":" Expression .
