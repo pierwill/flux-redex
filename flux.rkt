@@ -135,7 +135,6 @@
   (second (digit digit))
   ;; fractional_second = "."  { decimal_digit } .
   (fractionalSecond ("." digit))
-  ;; FIXME
   (timeOffset "Z"
               ("+" hour ":" minute)
               ("-" hour ":" minute))
@@ -156,8 +155,7 @@
   (ArrayLit ("[" ExpressionList "]"))
   (ExpressionList (Expression ...))
 
-  (DictLit EmptyDict
-           ("[" AssociativeList "]"))
+  (DictLit EmptyDict ("[" AssociativeList "]"))
   (EmptyDict ("[" ":" "]"))
   (AssociativeList (Association AssociativeList ...))
   (Association (Expression ":" Expression))
@@ -165,11 +163,10 @@
   (FunctionLit (FunctionParameters "=>" FunctionBody))
 
   ;; FunctionParameters = "(" [ ParameterList [ "," ] ] ")" .
-  ;; FIXME
-  (FunctionParameters ( "(" ParameterList ")" )
-                      emptyParamList
-                      )
-  (emptyParamList "()")
+  (FunctionParameters EmptyParameterList
+                      ("(" ParameterList ")")
+                      ("(" ParameterList "," ")"))
+  (EmptyParameterList "()")
 
   (ParameterList (Parameter Parameter ...))
 
@@ -244,5 +241,5 @@
 
   (PostfixExpression PrimaryExpression
                      (PostfixExpression PostfixOperator))
-  ;; 
+  ;;
   )
