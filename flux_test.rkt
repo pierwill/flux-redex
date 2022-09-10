@@ -95,6 +95,24 @@
               (term ("(" (foo bar) ")")
                     ))
 
+  (test-match Flux Parameter
+              (term sup))
+
+  (test-match Flux Parameter
+              (term (sup "=" 1)))
+
+  (test-match Flux ParameterList
+              (term ((sup "=" 1))
+                    ))
+
+  (test-match Flux ParameterList
+              (term (foo bar)
+                    ))
+
+  (test-match Flux ParameterList
+              (term ((foo "=" baz) (bar "=" true))
+                    ))
+
   ;; Expressions
   ;; -----------
 
