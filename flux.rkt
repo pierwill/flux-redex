@@ -56,8 +56,8 @@
   (Label Identifier StringLit)
   (FunctionTypeParameters (FunctionTypeParameter FunctionTypeParameter ...))
   (FunctionTypeParameter (Identifier ":" Monotype)
-                        ("<-" Identifier ":" MonoType)
-                        ("?" Identifier ":" MonoType))
+                         ("<-" Identifier ":" MonoType)
+                         ("?" Identifier ":" MonoType))
   (Constraints (Constraint Constraint ...))
   (Constraint (Tvar ":" Kinds))
   ;; Kinds       = identifier { "+" identifier } .
@@ -108,9 +108,9 @@
   ;; TODO maybe?
   ;; (regexLit)
 
-  (DurationLit (durationMagnitude durationUnit))
+  (DurationLit (durationMagnitude DurationUnit))
   (durationMagnitude integer)
-  (durationUnit "y" "mo" "w" "d" "h" "m" "s" "ms" "us" "μs" "ns")
+  (DurationUnit "y" "mo" "w" "d" "h" "m" "s" "ms" "us" "μs" "ns")
 
   ;; FIXME
   (DateTimeLit date (date "T" time))
@@ -153,8 +153,8 @@
             (Identifier ":" Expression)
             (StringLit ":" Expression))
 
-  (ArrayLit ("[" expressionList "]"))
-  (expressionList (Expression ...))
+  (ArrayLit ("[" ExpressionList "]"))
+  (ExpressionList (Expression ...))
 
   (DictLit EmptyDict
            ("[" AssociativeList "]"))
