@@ -134,9 +134,6 @@
   (RecordBody WithProperties PropertyList)
   (WithProperties (Identifier "with" PropertyList))
   (PropertyList (Property ...))
-  ;; Property       = identifier [ ":" Expression ]
-  ;;                | string_lit ":" Expression .
-  ;; FIXME
   (Property Identifier
             (Identifier ":" Expression)
             (StringLit ":" Expression))
@@ -151,10 +148,9 @@
 
   (FunctionLit (FunctionParameters "=>" FunctionBody))
 
-  ;; FunctionParameters = "(" [ ParameterList [ "," ] ] ")" .
   (FunctionParameters EmptyParameterList
                       ("(" ParameterList ")")
-                      ("(" ParameterList "," ")"))
+                      ("(" ParameterList "," ")")) ; spec means to allow trailing comma?
   (EmptyParameterList "()")
 
   (ParameterList (Parameter Parameter ...))
