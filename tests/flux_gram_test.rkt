@@ -73,6 +73,19 @@
                                         "]"))
                     ))
 
+  ;; (r: T) => bool
+  (define inner-func-type (term ("(" ((r ":" "T")) ")" "=>" "bool" )))
+  (test-match Flux FunctionType inner-func-type)
+
+  ;; (<-tables: [T], fn: (r: T) => bool)
+  (define func-ty-params (term (("<-" tables ":" "T") (fn ":" ,inner-func-type))))
+  (test-match Flux FunctionTypeParameters func-ty-params)
+
+  ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
+  (test-match Flux BuiltinStatement
+              (term ("builtin" filter ":" ("(" ,func-ty-params ")" "=>" ("[" "T" "]")))
+                    ))
+
   (test-match Flux TypeExpression
               (term "time"))
 
@@ -197,13 +210,10 @@
   ;;              (term (a "+" b)
   ;;                    ))
 
-  ;; TODO
-  ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
-
   ;; TODO constraints. This should fail:
   ;;     add = (a, b) => a + b
   ;;     add(a: {}, b: {})
   ;; See spec example.
 
-  ;; 
+  ;;
   )
