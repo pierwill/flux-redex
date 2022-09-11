@@ -31,10 +31,32 @@
               (term (foo "=" 1)))
 
   ;; function definition
+  ;; sup = () => 1
   (test-match Flux VariableAssignment
               (term (sup
                      "="
                      ( "()" "=>" 1))
+                    ))
+
+  ;; TODO
+  ;; add = (a, b) => a + b
+  (test-match Flux VariableAssignment
+              (term
+               (; Identifier
+                add
+                "="
+                (; FunctionList
+                 ("(" (a b) ")") ; ParameterList
+                 "=>"
+                 ;; FIXME once AdditiveExpression is fixed
+                 ;; (a "+" b)                      ; FunctionBody
+                 a
+                 )
+                )
+               ))
+
+  (test-match Flux FunctionParameters
+              (term ("(" (foo) ")")
                     ))
 
   (test-match Flux BuiltinStatement
@@ -169,7 +191,7 @@
   (test-match Flux ConditionalExpression
               (term ("if" a "then" b "else" c)
                     ))
-  ;; TODO bug?
+  ;; FIXME bug
   ;; (test-match Flux Expression
   ;;              (term (a "+" b)
   ;;                    ))
@@ -177,10 +199,8 @@
   ;; TODO
   ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
 
-  ;; TODO
-  ;; add = (a, b) => a + b
-
   ;; TODO constraints. This should fail:
+  ;;     add = (a, b) => a + b
   ;;     add(a: {}, b: {})
   ;; See spec example.
   )
