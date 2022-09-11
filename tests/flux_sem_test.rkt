@@ -1,6 +1,7 @@
 #lang racket
 (require redex
-         "../flux.rkt"
+         "../src/grammar.rkt"
+         "../src/reduction.rkt"
          )
 
 (module+ test
