@@ -8,6 +8,9 @@
 (define flux-red
   (reduction-relation
    Flux
+   (--> ("if" Expression_1 "then" Expression_2 "else" Expression_3)
+        ,(if (term Expression_1) (term Expression_2) (term Expression_3))
+        "if-then-else")
    (--> (Expression_1 "and" Expression_2)
         ,(and (term Expression_1) (term Expression_2))
         "and")
@@ -45,11 +48,24 @@
         "greater than or eq")
    ;; TODO "=~"
    ;; TODO "!~"
-   ;; TODO "+"
-   ;; TODO "-"
+   ;; FIXME after bugfix
+   ;; (--> (Expression_1 "+" Expression_2)
+   ;;      ,(+ (term Expression_1) (term Expression_2))
+   ;;      "add")
+   ;;    (--> (Expression_1 "-" Expression_2)
+   ;;      ,(- (term Expression_1) (term Expression_2))
+   ;;      "subtract")
    (--> (Expression_1 "^" Expression_2)
         ,(expt (term Expression_1) (term Expression_2))
         "exponentiation")
    ;; TODO (PipeOperator "|>")
    ;; TODO (PrefixOperator "+" "-")
+
+   ;; TODO do these unary prefix operators only apply to durations?
+   ;; (--> ("+" Expression)
+   ;;      ,(+ (term Expression))
+   ;;      "pos num")
+   ;; (--> ("-" Expression)
+   ;;      ,(- (term Expression))
+   ;;      "neg num")
    ))

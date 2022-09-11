@@ -8,7 +8,7 @@
 
   ;; SEMANTICS
   ;; =========
-  
+
   (test-->>
    flux-red
    (term (3 "^" 2))
@@ -19,11 +19,17 @@
    (term (3 "*" 2))
    (term 6))
 
+  (test-->>
+   flux-red
+   (term ("if" true "then" false "else" true))
+   (term false))
+
+  ;; FIXME
   ;; (test-->>
   ;;  flux-red
-  ;;  (term (4 "^" (2 "*" 2)))
-  ;;  (term 256))
-  
+  ;;  (term (1 ">" (2 "or" true)))
+  ;;  (term true))
+
   (test-->>
    flux-red
    (term (true "and" false))
@@ -34,6 +40,13 @@
    (term (true "or" false))
    (term true))
 
+  ;; FIXME #f vs false
+  ;; (test-->>
+  ;;  flux-red
+  ;;  (term (32 "!=" 31))
+  ;;  (term true))
+
+  ;; FIXME #f vs false
   ;; (test-->>
   ;; flux-red
   ;; (term (true "==" false))
