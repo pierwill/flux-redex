@@ -145,7 +145,8 @@
   ;; ----
   (define eleven (term ("1" "1")))
   (define y2k (term ("2" "0" "0" "0")))
-  (define test_time (term (,eleven ":" ,eleven ":" ,eleven)))
+  (define test_time (term (,eleven ":" ,eleven ":"  ,eleven)))
+  (define test_time_weird (term (,eleven ":" ("8" "8") ":"  ,eleven)))
   (define test_frac_s (term ("." ("1"))))
 
   (test-match Flux date (term (,y2k "-" ,eleven "-" ,eleven)))
@@ -153,6 +154,7 @@
   (test-match Flux month eleven)
   (test-match Flux day eleven)
   (test-match Flux time test_time)
+  (test-match Flux time test_time_weird)
   ;; (test-match Flux time (term (,test_time ,test_frac_s)))
   ;; (test-match Flux time (term (,test_time "Z")))
   ;; (test-match Flux time (term (,test_time ,timeOffset)))
