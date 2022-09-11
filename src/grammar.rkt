@@ -51,7 +51,7 @@
   (RecordTypeProperty (Label ":" MonoType))
   (Label Identifier StringLit)
   (FunctionTypeParameters (FunctionTypeParameter FunctionTypeParameter ...))
-  (FunctionTypeParameter (Identifier ":" Monotype)
+  (FunctionTypeParameter (Identifier ":" MonoType)
                          ("<-" Identifier ":" MonoType)
                          ("?" Identifier ":" MonoType))
   (Constraints (Constraint Constraint ...))
