@@ -92,7 +92,7 @@
   (test-match Flux decimals (term ("0")))
   (test-match Flux decimals (term ("0" "1")))
   (test-match Flux FloatLit (term (("0") ".")))
-  
+
   (test-match Flux RecordLit
               (term (
                      "{"
@@ -106,7 +106,7 @@
 
   (test-match Flux PropertyList
               '())
-  
+
   (test-match Flux FunctionLit
               (term ("()" "=>" 1)))
 
@@ -141,14 +141,13 @@
               (term ((foo "=" baz) (bar "=" true))
                     ))
 
-
   ;; TIME
   ;; ----
   (define eleven (term ("1" "1")))
   (define y2k (term ("2" "0" "0" "0")))
   (define test_time (term (,eleven ":" ,eleven ":" ,eleven)))
   (define test_frac_s (term ("." ("1"))))
-  
+
   (test-match Flux date (term (,y2k "-" ,eleven "-" ,eleven)))
   (test-match Flux year y2k)
   (test-match Flux month eleven)
@@ -164,7 +163,7 @@
   (test-match Flux timeOffset "Z")
   (test-match Flux timeOffset (term ("+" ,eleven ":" ,eleven)))
   (test-match Flux timeOffset (term ("-" ,eleven ":" ,eleven)))
-  
+
   ;; Expressions
   ;; -----------
 
@@ -203,4 +202,38 @@
   ;;     add = (a, b) => a + b
   ;;     add(a: {}, b: {})
   ;; See spec example.
+
+  ;;
+  (test-->>
+   flux-red
+   (term (3 "^" 2))
+   (term 9))
+
+  (test-->>
+   flux-red
+   (term (3 "*" 2))
+   (term 6))
+
+  (test-->>
+   flux-red
+   (term (true "and" false))
+   (term false))
+
+  (test-->>
+   flux-red
+   (term (true "or" false))
+   (term true))
+
+  ;; (test-->>
+  ;; flux-red
+  ;; (term (true "==" false))
+  ;; (term false))
+
+  ;; (apply-reduction-relation flux-red (term (9 "/" 4)))
+  ;; (apply-reduction-relation flux-red (term (9 "==" 9)))
+  ;; (apply-reduction-relation flux-red (term (sup "!=" 9)))
+  ;; (apply-reduction-relation flux-red (term (9 ">=" 4)))
+  ;; (apply-reduction-relation flux-red (term (4 "^" 2)))
+
+  ;; end test module
   )
