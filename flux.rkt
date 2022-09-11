@@ -40,9 +40,7 @@
   ;; TODO does this all belong to/in the type system?
   (TypeExpression MonoType (MonoType "where" Constraints))
   (MonoType Tvar BasicType ArrayType RecordType FunctionType)
-  ;; Tvar     = "A" ... "Z" .
-  ;; FIXME
-  (Tvar string)
+  (Tvar "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
   (BasicType "int" "uint" "float" "string" "bool" "time" "duration") ; TODO "bytes" and "regex"
   (ArrayType ("[" MonoType "]"))
   (RecordType ("{" "}")

@@ -77,14 +77,14 @@
               (term "time"))
 
   (test-match Flux TypeExpression
-              (term ("T1" "where" (("T1" ":" (fooo))))
+              (term ("T" "where" (("T" ":" (fooo))))
                     ))
 
   (test-match Flux Tvar
-              (term "sup"))
+              (term "B"))
 
   (test-match Flux Constraint
-              (term ("T1" ":" (fooo))
+              (term ("T" ":" (fooo))
                     ))
 
   ;; Literals
