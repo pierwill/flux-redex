@@ -37,7 +37,6 @@
   (OptionPath Identifier (Identifier "." Identifier))
 
   (BuiltinStatement ("builtin" Identifier ":" TypeExpression))
-  ;; TODO does this all belong to/in the type system?
   (TypeExpression MonoType (MonoType "where" Constraints))
   (MonoType Tvar BasicType ArrayType RecordType FunctionType)
   (Tvar "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
@@ -73,7 +72,6 @@
 
   ;; TODO decide how to handle this
   ;; identifier (letter { letter | unicode_digit } .
-  ;; (identifier (letter (letter ))
   (Identifier variable-not-otherwise-mentioned)
 
   (decimalDigit "0" "1" "2" "3" "4" "5" "6" "7" "8" "9")
@@ -164,24 +162,14 @@
   ;; Operators
   ;; ---------
   (LogicalOperator "and" "or")
-
   (UnaryLogicalOperator "not" "exists")
-
   (ComparisonOperator "=="  "!="  "<"  "<="  ">"  ">="  "=~"  "!~")
-
   (AdditiveOperator "+" "-")
-
   (MultiplicativeOperator "*" "/" "%")
-
   (ExponentOperator "^")
-
   (PipeOperator "|>")
-
   (PrefixOperator "+" "-")
-
-  (PostfixOperator MemberExpression
-                   CallExpression
-                   IndexExpression)
+  (PostfixOperator MemberExpression CallExpression IndexExpression)
 
   ;; Expressions
   ;; -----------
