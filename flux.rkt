@@ -45,9 +45,8 @@
   (Tvar string)
   (BasicType "int" "uint" "float" "string" "bool" "time" "duration") ; TODO "bytes" and "regex"
   (ArrayType ("[" MonoType "]"))
-  ;; Record   = ( "{" [Properties] "}" ) | ( "{" Tvar "with" Properties "}" ) .
-  ;; FIXME
-  (RecordType ("{" (RecordTypeProperties ...) "}")
+  (RecordType ("{" "}")
+              ("{" RecordTypeProperties "}")
               ("{" Tvar "with" RecordTypeProperties "}"))
   (FunctionType ("(" ")" "=>" MonoType)
                 ("(" FunctionTypeParameters ")" "=>" MonoType))
