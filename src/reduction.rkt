@@ -29,16 +29,6 @@
         ,(if (equal? (term Expression_1) (term "null")) #f #t)
         "exists")
 
-   (--> (Expression_1 "*" Expression_2)
-        ,(* (term Expression_1) (term Expression_2))
-        "multiply")
-
-   (--> (Expression_1 "/" Expression_2)
-        ,(/ (term Expression_1) (term Expression_2))
-        "divide")
-
-   ;; TODO %
-
    (--> (Expression_1 "==" Expression_2)
         ,(equal? (term Expression_1) (term Expression_2))
         "equal")
@@ -63,19 +53,27 @@
         ,(>= (term Expression_1) (term Expression_2))
         "greater than or eq")
 
-   ;; FIXME after bugfix
-   ;; (--> (Expression_1 "+" Expression_2)
-   ;;      ,(+ (term Expression_1) (term Expression_2))
-   ;;      "add")
+   (--> (Expression_1 "+" Expression_2)
+        ,(+ (term Expression_1) (term Expression_2))
+        "add")
 
-   ;; FIXME after bugfix
-   ;; (--> (Expression_1 "-" Expression_2)
-   ;;      ,(- (term Expression_1) (term Expression_2))
-   ;;      "subtract")
+   (--> (Expression_1 "-" Expression_2)
+        ,(- (term Expression_1) (term Expression_2))
+        "subtract")
+
+   (--> (Expression_1 "*" Expression_2)
+        ,(* (term Expression_1) (term Expression_2))
+        "multiply")
+
+   (--> (Expression_1 "/" Expression_2)
+        ,(/ (term Expression_1) (term Expression_2))
+        "divide")
 
    (--> (Expression_1 "^" Expression_2)
         ,(expt (term Expression_1) (term Expression_2))
         "exponentiation")
+
+   ;; TODO (PipeOperator "|>")
 
    ;; TODO do these unary prefix operators only apply to durations?
    ;; (--> ("+" Expression)
@@ -85,10 +83,13 @@
    ;;      ,()
    ;;      "??")
 
-   ;; TODO (PipeOperator "|>")
-
    ;; TODO (PrefixOperator "+" "-")
 
    ;; TODO "=~"
    ;; TODO "!~"
+   ;; TODO %
+
+   ;;
    ))
+
+(apply-reduction-relation flux-red (term (2 "-" 2)))
