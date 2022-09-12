@@ -39,32 +39,19 @@
         Function
         Generator
         )
-  ;; (Bool boolean "null")
-
-  ;; Type constraints are a type system concept used to implement static ad hoc polymorphism.
-  ;; For example, `add = (a, b) => a + b` is a function that is defined only for `Addable` types.
-  ;; If one were to pass a record to `add` like so:
-  ;;
-  ;;     add(a: {}, b: {})
-  ;;
-  ;; the result would be a compile-time type error because records are not addable.
-  ;; Like types, constraints are never explicitly declared but rather inferred from the context.
-  (TypeConstraint Addable
-                  Subtractable
-                  Divisable
-                  Numeric
-                  Comparable
-                  Equatable
-                  Nullable
-                  Record
-                  Negatable
-                  Timeable
-                  Stringable)
 
   ;;
   )
 
-;; TODO a function to get type/type constraints?
+;; Type constraints are a type system concept used to implement static ad hoc polymorphism.
+;; For example, `add = (a, b) => a + b` is a function that is defined only for `Addable` types.
+;; If one were to pass a record to `add` like so:
+;;
+;;     add(a: {}, b: {})
+;;
+;; the result would be a compile-time type error because records are not addable.
+;; Like types, constraints are never explicitly declared but rather inferred from the context.
+;; (TypeConstraint Addable Subtractable Divisable Numeric Comparable Equatable Nullable Record Negatable Timeable Stringable)
 
 ;; Addable types are those the binary arithmetic operator + accepts.
 ;; Int, Uint, Float, and String types are Addable.
@@ -189,10 +176,12 @@
   [(is-stringable _) #f]
   )
 
+;; TODO a function to get type/type constraints?
+
 (module+ test
   (test-equal (term (is-divisable "null")) #f)
   (test-equal (term (is-record Record)) #t)
   (test-equal (term (is-equatable Bool)) #t)
   (test-equal (term (is-nullable Bool)) #t)
   (test-equal (term (is-nullable Array)) #f)
-)
+  )
