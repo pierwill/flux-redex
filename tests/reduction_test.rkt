@@ -40,6 +40,16 @@
    (term (true "or" false))
    (term true))
 
+  (test-->>
+   flux-red
+   (term ("exists" "null"))
+   (term #f))
+
+  (test-->>
+   flux-red
+   (term ("exists" "hello"))
+   (term #t))
+  
   ;; FIXME #f vs false
   ;; (test-->>
   ;;  flux-red

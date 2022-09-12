@@ -20,7 +20,9 @@
    (--> ("not" Expression_1)
         ,(not (term Expression_1))
         "not")
-   ;; TODO exists
+   (--> ("exists" Expression_1)
+        ,(if (equal? (term Expression_1) (term "null")) #f #t)
+        "exists")
    (--> (Expression_1 "*" Expression_2)
         ,(* (term Expression_1) (term Expression_2))
         "multiply")
