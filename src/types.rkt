@@ -147,7 +147,7 @@
   [(is-nullable String) #t]
   [(is-nullable Duration) #t]
   [(is-nullable Time) #t]
-  [(is-nullable _) #t]
+  [(is-nullable _) #f]
   )
 
 ;; Records are the only types that fall under this constraint.
@@ -189,8 +189,10 @@
   [(is-stringable _) #f]
   )
 
-(term (is-divisable "null"))
-(term (is-record Record))
-(term (is-equatable Bool))
-(term (is-nullable Bool))
-(term (is-nullable Array))
+(module+ test
+  (test-equal (term (is-divisable "null")) #f)
+  (test-equal (term (is-record Record)) #t)
+  (test-equal (term (is-equatable Bool)) #t)
+  (test-equal (term (is-nullable Bool)) #t)
+  (test-equal (term (is-nullable Array)) #f)
+)
