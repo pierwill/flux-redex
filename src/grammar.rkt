@@ -186,8 +186,9 @@
   (UnaryLogicalExpression ComparisonExpression
                           (UnaryLogicalOperator UnaryLogicalExpression))
 
-  (ComparisonExpression MultiplicativeExpression
-                        (ComparisonExpression ComparisonOperator MultiplicativeExpression))
+  ;; NOTE This has not been approved by Flux maintainers yet
+  (ComparisonExpression AdditiveExpression
+                        (ComparisonExpression ComparisonOperator AdditiveExpression))
 
   (AdditiveExpression MultiplicativeExpression
                       (AdditiveExpression AdditiveOperator MultiplicativeExpression))

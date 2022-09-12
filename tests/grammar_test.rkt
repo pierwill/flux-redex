@@ -206,9 +206,9 @@
               (term ("if" a "then" b "else" c)
                     ))
   ;; FIXME bug
-  ;; (test-match Flux Expression
-  ;;              (term (a "+" b)
-  ;;                    ))
+  (test-match Flux Expression
+               (term (a "+" b)
+                     ))
 
   ;; TODO constraints. This should fail:
   ;;     add = (a, b) => a + b
