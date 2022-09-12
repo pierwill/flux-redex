@@ -27,8 +27,8 @@
   ;; FIXME
   ;; (test-->>
   ;;  flux-red
-  ;;  (term (1 ">" (2 "or" true)))
-  ;;  (term true))
+  ;;  (term (1 ">" (2 "^" 2)))
+  ;;  (term false))
 
   (test-->>
    flux-red
