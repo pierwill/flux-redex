@@ -51,6 +51,7 @@
 ;;
 ;; the result would be a compile-time type error because records are not addable.
 ;; Like types, constraints are never explicitly declared but rather inferred from the context.
+;;
 ;; (TypeConstraint Addable Subtractable Divisable Numeric Comparable Equatable Nullable Record Negatable Timeable Stringable)
 
 ;; Addable types are those the binary arithmetic operator + accepts.
