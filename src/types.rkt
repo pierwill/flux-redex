@@ -180,6 +180,7 @@
 ;; TODO a function to get type/type constraints?
 
 (module+ test
+  (test-equal (term (is-addable Record)) #f)
   (test-equal (term (is-divisable "null")) #f)
   (test-equal (term (is-record Record)) #t)
   (test-equal (term (is-equatable Bool)) #t)
