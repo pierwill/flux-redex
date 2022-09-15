@@ -25,38 +25,26 @@
            #f #t)
 
   (E ::= hole
-
      ("if" E "then" Expression_1 "else" Expression_2)
-
      (E "=" Expression)
      (Val "=" E)
-
      (E "+" Expression)
      (Val "+" E)
-
      (E "-" Expression)
      (Val "-" E)
-
      (E "*" Expression)
      (Val "*" E)
-
      (E "/" Expression)
      (Val "/" E)
-
      (E "==" Expression)
      (Val "==" E)
-
      (E "and" Expression)
      (Val "and" E)
-
      (E "or" Expression)
      (Val "or" E)
-
      ("not" E)
-
      ("exists" E)
      )
-
   ;;
   )
 
@@ -149,6 +137,7 @@
         (in-hole E ,(expt (term Val_1) (term Val_2)))
         "exponentiation")
 
+   ;; TODO
    ;; <	Less than in lexicographic order	"ant" < "bee"	true
    ;; >	Greater than in lexicographic order	"ant" > "bee"	false
 
