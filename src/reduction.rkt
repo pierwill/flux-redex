@@ -5,11 +5,14 @@
 
 (define-extended-language Flux-eval Flux
 
+  (Store ::= emptyStore
+         ([Varname Val] ...))
+
+  (Varname ::= Identifier)
   (Val ::= IntVal
        StringVal
        BoolVal
        "null"
-
        )
 
   (IntVal ::= IntLit)
@@ -51,11 +54,15 @@
   ;;
   )
 
-(provide flux-red)
+(define initial (term ([true #t] [false #f])))
 
 (define flux-red
   (reduction-relation
    Flux-eval
+
+   (--> emptyStore
+        ,initial
+        "init")
 
    ;; TODO
    (--> ("if" Expression_1 "then" Expression_2 "else" Expression_3)
@@ -157,6 +164,14 @@
 
 (module+ test
 
+  ;; store
+  (test-match Flux-eval Store (term emptyStore))
+  (test-match Flux-eval Store initial)
+  (test-match Flux-eval Store (term ([s 1])))
+
+  (test-->> flux-red (term emptyStore) initial)
+
+  ;; expression evaluation
   (test-->> flux-red (term (4 "==" 2)) (term #f))
   (test-->> flux-red (term (4 "!=" 2)) (term #t))
   (test-->> flux-red (term (6 "==" (4 "+" 2))) (term #t))
@@ -191,7 +206,7 @@
   (test-->> flux-red (term ("not" ("not" ("not" ("not" #f))))) (term #f))
   (test-->> flux-red (term ("ab" "+" "c")) (term "abc"))
   (test-->> flux-red (term ("hello, " "+" "world")) (term "hello, world"))
-  
+
   ;; FIXME () + ()
   ;; (test-->> flux-red (term ((#t "and" #f) "and" (#t "and" #f))) (term #f))
   ;; (test-->> flux-red (term ((#t "or" #f) "or" (#t "or" #f))) (term #f))
@@ -210,3 +225,5 @@
 
   ;;
   )
+
+(provide flux-red)
