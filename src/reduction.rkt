@@ -27,9 +27,11 @@
 
   (E ::= hole
 
+     ("if" E "then" Expression_1 "else" Expression_2)
+
      (E "=" Expression)
      (Val "=" E)
-     
+
      (E "+" Expression)
      (Val "+" E)
 
@@ -223,8 +225,7 @@
   (test-->> flux-red (term ("not" #f)) (term #t))
   (test-->> flux-red (term ("not" ("not" #f))) (term #f))
   (test-->> flux-red (term ("not" ("not" ("not" ("not" #f))))) (term #f))
-  (test-->> flux-red (term ("ab" "+" "c")) (term "abc"))
-  (test-->> flux-red (term ("hello, " "+" "world")) (term "hello, world"))
+  (test-->> flux-red (term ("if" #t "then" #f "else" #t)) (term #f))
 
   ;; FIXME () + ()
   ;; (test-->> flux-red (term ((#t "and" #f) "and" (#t "and" #f))) (term #f))
@@ -236,7 +237,6 @@
   ;;           (term (("not" #t) "or" ("not" #t)))
   ;;           ))
 
-  ;; (test-->> flux-red (term ("if" true "then" false "else" true)) (term false))
   ;; (test-->> flux-red (term (true "or" false)) (term true))
   ;; (test-->> flux-red (term (1 ">" (2 "^" 2))) (term false))
   ;; (test-->> flux-red (term (32 "!=" 31)) (term true))
