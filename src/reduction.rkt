@@ -5,9 +5,16 @@
 
 (define-extended-language Flux-eval Flux
 
-  (Val ::= IntVal)
+  (Val ::= IntVal
+       StringVal
+       "null"
+       ;; temporary hack
+       ;; TODO use BoolVal ::= true false and define them in a Store
+       #f #t
+       )
 
   (IntVal ::= IntLit)
+  (StringVal ::= StringLit)
 
   (E ::= hole
      (E "+" Expression)
@@ -20,6 +27,7 @@
      (Val "/" E)
      (E "==" Expression)
      (Val "==" E)
+     ("exists" E)
      )
 
   ;;
@@ -31,24 +39,28 @@
   (reduction-relation
    Flux-eval
 
+   ;; TODO
    (--> ("if" Expression_1 "then" Expression_2 "else" Expression_3)
         ,(if (term Expression_1) (term Expression_2) (term Expression_3))
         "if-then-else")
 
+   ;; TODO
    (--> (Expression_1 "and" Expression_2)
         ,(and (term Expression_1) (term Expression_2))
         "and")
 
+   ;; TODO
    (--> (Expression_1 "or" Expression_2)
         ,(or (term Expression_1) (term Expression_2))
         "or")
 
+   ;; TODO
    (--> ("not" Expression_1)
         ,(not (term Expression_1))
         "not")
 
-   (--> ("exists" Expression_1)
-        ,(if (equal? (term Expression_1) (term "null")) #f #t)
+   (--> (in-hole E ("exists" Val))
+        (in-hole E ,(if (equal? (term Val) (term "null")) #f #t))
         "exists")
 
    (--> (in-hole E (Val_1 "==" Val_2))
@@ -59,18 +71,22 @@
         (in-hole E ,(not (equal? (term Val_1) (term Val_2))))
         "not-equal")
 
+   ;; TODO
    (--> (Expression_1 "<" Expression_2)
         ,(< (term Expression_1) (term Expression_2))
         "less than")
 
+   ;; TODO
    (--> (Expression_1 ">" Expression_2)
         ,(> (term Expression_1) (term Expression_2))
         "greater than")
 
+   ;; TODO
    (--> (Expression_1 "<=" Expression_2)
         ,(<= (term Expression_1) (term Expression_2))
         "less than or eq")
 
+   ;; TODO
    (--> (Expression_1 ">=" Expression_2)
         ,(>= (term Expression_1) (term Expression_2))
         "greater than or eq")
@@ -133,6 +149,8 @@
   (test-->> flux-red (term (12 "/" (2 "+" 2))) (term 3))
   (test-->> flux-red (term ("exists" "null")) (term #f))
   (test-->> flux-red (term ("exists" "hello")) (term #t))
+  (test-->> flux-red (term ("exists" ("exists" "hello"))) (term #t))
+  (test-->> flux-red (term ("exists" ("exists" "null"))) (term #t))
   ;; (test-->> flux-red (term ("if" true "then" false "else" true)) (term false))
   ;; (test-->> flux-red (term (true "and" false)) (term false))
   ;; (test-->> flux-red (term (true "or" false)) (term true))
