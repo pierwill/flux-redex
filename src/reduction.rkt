@@ -3,12 +3,13 @@
          "grammar.rkt"
          )
 
+
 (define-extended-language Flux-eval Flux
 
-  (Store ::= emptyStore
-         ([Varname Val] ...))
+  (Store ::= ·
+         ([VarName Val] ...))
 
-  (Varname ::= Identifier)
+  (VarName ::= Identifier)
   (Val ::= IntVal
        StringVal
        BoolVal
@@ -19,12 +20,16 @@
   (StringVal ::= StringLit)
   (BoolVal ::=
            ;; temporary hack
-           ;; define these in a Store
+           ;; define these in the Store for all programs
            ;; (term #t)
            ;; (term #f)
            #f #t)
 
   (E ::= hole
+
+     (E "=" Expression)
+     (Val "=" E)
+     
      (E "+" Expression)
      (Val "+" E)
 
@@ -54,15 +59,20 @@
   ;;
   )
 
-(define initial (term ([true #t] [false #f])))
+(define initial-store (term ([true #t] [false #f])))
 
 (define flux-red
   (reduction-relation
    Flux-eval
 
-   (--> emptyStore
-        ,initial
-        "init")
+   (--> ·
+        ,initial-store
+        "initialize-store")
+
+   (--> (Store_1 (in-hole E (VarName "=" Val)))
+        (Store_2)
+        (where [(VarName_1 Val_1) ...] Store_1)
+        (where Store_2 [(VarName Val) (VarName_1 Val_1) ...]))
 
    ;; TODO
    (--> ("if" Expression_1 "then" Expression_2 "else" Expression_3)
@@ -165,11 +175,20 @@
 (module+ test
 
   ;; store
-  (test-match Flux-eval Store (term emptyStore))
-  (test-match Flux-eval Store initial)
+  (test-match Flux-eval Store (term ·))
+  (test-match Flux-eval Store initial-store)
   (test-match Flux-eval Store (term ([s 1])))
+  (test-match Flux-eval Store (term ([sup 1] [true #t] [false #f])))
+  (test-->> flux-red
+            (term (,initial-store (sup "=" 1)))
+            (term (([sup 1] [true #t] [false #f])))
+            )
 
-  (test-->> flux-red (term emptyStore) initial)
+  ;; TODO
+  ;; (test-->> flux-red
+  ;;           (term (,initial-store (sup "=" (1 "+" 1))))
+  ;;           (term (([sup 2] [true #t] [false #f])))
+  ;;           )
 
   ;; expression evaluation
   (test-->> flux-red (term (4 "==" 2)) (term #f))
