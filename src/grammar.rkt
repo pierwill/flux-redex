@@ -240,6 +240,7 @@
   (define func-ty-params (term (("<-" tables ":" "T") (fn ":" ,inner-func-type))))
   (test-match Flux FunctionTypeParameters func-ty-params)
   (define array-t (term ("[" "T" "]")))
+  ;; TODO `stream[T]`? See https://github.com/influxdata/flux/pull/5206
   ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
   (test-match Flux BuiltinStatement (term ("builtin" filter ":" ("(" ,func-ty-params ")" "=>" ,array-t))))
 
