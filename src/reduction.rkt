@@ -9,15 +9,17 @@
        StringVal
        BoolVal
        "null"
-       ;; temporary hack
-       ;; define these in a Store
-       ;; (term #t)
-       ;; (term #f)
+
        )
 
   (IntVal ::= IntLit)
   (StringVal ::= StringLit)
-  (BoolVal ::= #f #t)
+  (BoolVal ::=
+           ;; temporary hack
+           ;; define these in a Store
+           ;; (term #t)
+           ;; (term #f)
+           #f #t)
 
   (E ::= hole
      (E "+" Expression)
@@ -84,30 +86,31 @@
         (in-hole E ,(not (equal? (term Val_1) (term Val_2))))
         "not-equal")
 
-   ;; TODO
-   (--> (Expression_1 "<" Expression_2)
-        ,(< (term Expression_1) (term Expression_2))
+   (--> (in-hole E (Val_1 "<" Val_2))
+        (in-hole E ,(< (term Val_1) (term Val_2)))
         "less than")
 
-   ;; TODO
-   (--> (Expression_1 ">" Expression_2)
-        ,(> (term Expression_1) (term Expression_2))
+   (--> (in-hole E (Val_1 ">" Val_2))
+        (in-hole E ,(> (term Val_1) (term Val_2)))
         "greater than")
 
-   ;; TODO
-   (--> (Expression_1 "<=" Expression_2)
-        ,(<= (term Expression_1) (term Expression_2))
+   (--> (in-hole E (Val_1 "<=" Val_2))
+        (in-hole E ,(<= (term Val_1) (term Val_2)))
         "less than or eq")
 
-   ;; TODO
-   (--> (Expression_1 ">=" Expression_2)
-        ,(>= (term Expression_1) (term Expression_2))
+   (--> (in-hole E (Val_1 ">=" Val_2))
+        (in-hole E ,(>= (term Val_1) (term Val_2)))
         "greater than or eq")
 
    (--> (in-hole E (integer_1 "+" integer_2))
         (in-hole E ,(+ (term integer_1) (term integer_2)))
         "add")
 
+   (--> (in-hole E (StringVal_1 "+" StringVal_2))
+        (in-hole E ,(string-append (term StringVal_1) (term StringVal_2)))
+        "string-concat")
+
+   ;; TODO consider encoding constraints in more specific reduction rules
    ;; (--> (in-hole E (IntLit_1 "+" IntLit_2))
    ;;      (in-hole E  ,(+ (term IntLit_1) (term IntLit_2)))
    ;;      "add-int")
@@ -128,12 +131,17 @@
         (in-hole E ,(expt (term Val_1) (term Val_2)))
         "exponentiation")
 
+   ;; <	Less than in lexicographic order	"ant" < "bee"	true
+   ;; >	Greater than in lexicographic order	"ant" > "bee"	false
+
    ;; TODO (PipeOperator "|>")
 
    ;; TODO do these unary prefix operators only apply to durations?
+
    ;; (--> ("+" Expression)
    ;;      ,()
    ;;      "?")
+
    ;; (--> ("-" Expression)
    ;;      ,()
    ;;      "??")
@@ -152,6 +160,11 @@
   (test-->> flux-red (term (4 "==" 2)) (term #f))
   (test-->> flux-red (term (4 "!=" 2)) (term #t))
   (test-->> flux-red (term (6 "==" (4 "+" 2))) (term #t))
+  (test-->> flux-red (term (4 ">" 2)) (term #t))
+  (test-->> flux-red (term (4 "<" 2)) (term #f))
+  (test-->> flux-red (term (2 "<=" 2)) (term #t))
+  (test-->> flux-red (term (2 ">=" 2)) (term #t))
+  (test-->> flux-red (term (#f "and" (2 ">=" 2))) (term #f))
   (test-->> flux-red (term (1 "-" 1)) (term 0))
   (test-->> flux-red (term (9 "-" (4 "-" 2))) (term 7))
   (test-->> flux-red (term (1 "+" (4 "+" 2))) (term 7))
@@ -176,7 +189,9 @@
   (test-->> flux-red (term ("not" #f)) (term #t))
   (test-->> flux-red (term ("not" ("not" #f))) (term #f))
   (test-->> flux-red (term ("not" ("not" ("not" ("not" #f))))) (term #f))
-
+  (test-->> flux-red (term ("ab" "+" "c")) (term "abc"))
+  (test-->> flux-red (term ("hello, " "+" "world")) (term "hello, world"))
+  
   ;; FIXME () + ()
   ;; (test-->> flux-red (term ((#t "and" #f) "and" (#t "and" #f))) (term #f))
   ;; (test-->> flux-red (term ((#t "or" #f) "or" (#t "or" #f))) (term #f))
