@@ -254,9 +254,7 @@
                 (; FunctionList
                  ("(" (a b) ")") ; ParameterList
                  "=>"
-                 ;; FIXME once AdditiveExpression is fixed
-                 ;; (a "+" b)                      ; FunctionBody
-                 a
+                 (a "+" b)                      ; FunctionBody
                  )
                 )
                ))
