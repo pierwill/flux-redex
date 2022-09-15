@@ -3,7 +3,6 @@
          "grammar.rkt"
          )
 
-
 (define-extended-language Flux-eval Flux
 
   (Store ::= ·
@@ -77,8 +76,8 @@
         (where Store_2 [(VarName Val) (VarName_1 Val_1) ...]))
 
    ;; TODO
-   (--> ("if" Expression_1 "then" Expression_2 "else" Expression_3)
-        ,(if (term Expression_1) (term Expression_2) (term Expression_3))
+   (--> (in-hole E ("if" Val_1 "then" Val_2 "else" Val_3))
+        (in-hole E ,(if (term Val_1) (term Val_2) (term Val_3)))
         "if-then-else")
 
    (--> (in-hole E (Val_1 "and" Val_2))
@@ -181,10 +180,8 @@
   (test-match Flux-eval Store initial-store)
   (test-match Flux-eval Store (term ([s 1])))
   (test-match Flux-eval Store (term ([sup 1] [true #t] [false #f])))
-  (test-->> flux-red
-            (term (,initial-store (sup "=" 1)))
-            (term (([sup 1] [true #t] [false #f])))
-            )
+  (define store-after-assign (term (([sup 1] [true #t] [false #f]))))
+  (test-->> flux-red (term [,initial-store (sup "=" 1)]) (term ,store-after-assign))
 
   ;; TODO
   ;; (test-->> flux-red
@@ -212,6 +209,8 @@
   (test-->> flux-red (term (12 "/" (2 "+" 2))) (term 3))
   (test-->> flux-red (term (6 "==" (4 "+" 2))) (term #t))
   (test-->> flux-red (term ((4 "+" 2) "==" 7)) (term #f))
+  (test-->> flux-red (term ("ab" "+" "c")) (term "abc"))
+  (test-->> flux-red (term ("hello, " "+" "world")) (term "hello, world"))
   (test-->> flux-red (term ("exists" "null")) (term #f))
   (test-->> flux-red (term ("exists" "hello")) (term #t))
   (test-->> flux-red (term ("exists" ("exists" "hello"))) (term #t))
