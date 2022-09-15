@@ -5,9 +5,6 @@
 
 (define-extended-language Flux-eval Flux
 
-  ;; (MachineState ::= (Store E))
-  ;; (Store ((VarName Val) ... ))
-
   (Val ::= IntVal)
 
   (IntVal ::= IntLit)
@@ -15,6 +12,12 @@
   (E ::= hole
      (E "+" Expression)
      (Val "+" E)
+     (E "-" Expression)
+     (Val "-" E)
+     (E "*" Expression)
+     (Val "*" E)
+     (E "/" Expression)
+     (Val "/" E)
      (E "==" Expression)
      (Val "==" E)
      )
@@ -80,20 +83,20 @@
    ;;      (in-hole E  ,(+ (term IntLit_1) (term IntLit_2)))
    ;;      "add-int")
 
-   (--> (Expression_1 "-" Expression_2)
-        ,(- (term Expression_1) (term Expression_2))
+   (--> (in-hole E (Val_1 "-" Val_2))
+        (in-hole E ,(- (term Val_1) (term Val_2)))
         "subtract")
 
-   (--> (Expression_1 "*" Expression_2)
-        ,(* (term Expression_1) (term Expression_2))
+   (--> (in-hole E (Val_1 "*" Val_2))
+        (in-hole E ,(* (term Val_1) (term Val_2)))
         "multiply")
 
-   (--> (Expression_1 "/" Expression_2)
-        ,(/ (term Expression_1) (term Expression_2))
+   (--> (in-hole E (Val_1 "/" Val_2))
+        (in-hole E ,(/ (term Val_1) (term Val_2)))
         "divide")
 
-   (--> (Expression_1 "^" Expression_2)
-        ,(expt (term Expression_1) (term Expression_2))
+   (--> (in-hole E (Val_1 "^" Val_2))
+        (in-hole E ,(expt (term Val_1) (term Val_2)))
         "exponentiation")
 
    ;; TODO (PipeOperator "|>")
@@ -120,9 +123,14 @@
   (test-->> flux-red (term (4 "==" 2)) (term #f))
   (test-->> flux-red (term (4 "!=" 2)) (term #t))
   (test-->> flux-red (term (6 "==" (4 "+" 2))) (term #t))
+  (test-->> flux-red (term (1 "-" 1)) (term 0))
+  (test-->> flux-red (term (9 "-" (4 "-" 2))) (term 7))
   (test-->> flux-red (term (1 "+" (4 "+" 2))) (term 7))
   (test-->> flux-red (term (3 "^" 2)) (term 9))
   (test-->> flux-red (term (3 "*" 2)) (term 6))
+  (test-->> flux-red (term (3 "*" (3 "*" 4))) (term 36))
+  (test-->> flux-red (term (12 "/" 4)) (term 3))
+  (test-->> flux-red (term (12 "/" (2 "+" 2))) (term 3))
   (test-->> flux-red (term ("exists" "null")) (term #f))
   (test-->> flux-red (term ("exists" "hello")) (term #t))
   ;; (test-->> flux-red (term ("if" true "then" false "else" true)) (term false))
