@@ -224,37 +224,24 @@
   ;; function definition `sup = () => 1`
   (test-match Flux VariableAssignment (term (sup "=" ( "()" "=>" 1)) ))
   ;; add = (a, b) => a + b
-  (test-match Flux VariableAssignment
-              (term
-               (; Identifier
-                add
-                "="
-                (; FunctionLit
-                 ("(" (a b) ")") ; ParameterList
-                 "=>"
-                 (a "+" b) ; FunctionBody
-                 )
-                )
-               ))
+  (test-match Flux VariableAssignment (term ( add "=" (("(" (a b) ")") "=>" (a "+" b)))))
 
   (test-match Flux FunctionParameters (term ("(" (foo) ")") ))
 
+  (define array-int (term ("[" "int" "]")))
   (test-match Flux BuiltinStatement (term ("builtin" foo ":" "int") ))
-  (test-match Flux BuiltinStatement (term ("builtin" foo ":" ("[" "int" "]")) ))
-  (test-match Flux BuiltinStatement (term ("builtin" foo ":" ("[" "int" "]")) ))
+  (test-match Flux BuiltinStatement (term ("builtin" foo ":" ,array-int) ))
+  (test-match Flux BuiltinStatement (term ("builtin" foo ":" ,array-int) ))
 
   ;; (r: T) => bool
   (define inner-func-type (term ("(" ((r ":" "T")) ")" "=>" "bool" )))
   (test-match Flux FunctionType inner-func-type)
-
   ;; (<-tables: [T], fn: (r: T) => bool)
   (define func-ty-params (term (("<-" tables ":" "T") (fn ":" ,inner-func-type))))
   (test-match Flux FunctionTypeParameters func-ty-params)
-
+  (define array-t (term ("[" "T" "]")))
   ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
-  (test-match Flux BuiltinStatement
-              (term ("builtin" filter ":" ("(" ,func-ty-params ")" "=>" ("[" "T" "]")))
-                    ))
+  (test-match Flux BuiltinStatement (term ("builtin" filter ":" ("(" ,func-ty-params ")" "=>" ,array-t))))
 
   (test-match Flux TypeExpression (term "time"))
   (test-match Flux TypeExpression (term ("T" "where" (("T" ":" (fooo)))) ))
@@ -271,17 +258,11 @@
   (test-match Flux Property (term (sup ":" 1)))
   (test-match Flux PropertyList '())
   (test-match Flux FunctionLit (term ("()" "=>" 1)))
-  
-  (test-match Flux FunctionLit
-              (term
-               (
-                ("(" (a b) ")")     ; FunctionParameters
-                "=>"
-                1                 ; FunctionBody
-                )
-               ))
 
-  (test-match Flux FunctionParameters (term ("(" (foo bar) ")") ))
+  (define fn-params (term ("(" (a b) ")")))
+  (test-match Flux FunctionParameters fn-params)
+  ;; (a, b) => 1 ;; UNUSED Params?
+  (test-match Flux FunctionLit (term ( ,fn-params "=>" 1 ) ))
   (test-match Flux Parameter (term sup))
   (test-match Flux Parameter (term (sup "=" 1)))
   (test-match Flux ParameterList (term ((sup "=" 1)) ))
