@@ -3,6 +3,8 @@
          "grammar.rkt"
          )
 
+(provide flux-red)
+
 (define-extended-language Flux-eval Flux
 
   (Store ::= ·
@@ -36,6 +38,8 @@
      (Val "*" E)
      (E "/" Expression)
      (Val "/" E)
+     (E "^" Expression)
+     (Val "^" E)
      (E "==" Expression)
      (Val "==" E)
      (E "and" Expression)
@@ -182,6 +186,8 @@
   (test-->> flux-red (term (4 "==" 2)) (term #f))
   (test-->> flux-red (term (4 "!=" 2)) (term #t))
   (test-->> flux-red (term (6 "==" (4 "+" 2))) (term #t))
+  (test-->> flux-red (term (6 "==" (4 "+" 2))) (term #t))
+  (test-->> flux-red (term ((4 "+" 2) "==" 7)) (term #f))
   (test-->> flux-red (term (4 ">" 2)) (term #t))
   (test-->> flux-red (term (4 "<" 2)) (term #f))
   (test-->> flux-red (term (2 "<=" 2)) (term #t))
@@ -196,8 +202,8 @@
   (test-->> flux-red (term (3 "*" (3 "*" 4))) (term 36))
   (test-->> flux-red (term (12 "/" 4)) (term 3))
   (test-->> flux-red (term (12 "/" (2 "+" 2))) (term 3))
-  (test-->> flux-red (term (6 "==" (4 "+" 2))) (term #t))
-  (test-->> flux-red (term ((4 "+" 2) "==" 7)) (term #f))
+  (test-->> flux-red (term (2 "^" 3)) (term 8))
+  (test-->> flux-red (term (2 "^" (2 "+" 1))) (term 8))
   (test-->> flux-red (term ("ab" "+" "c")) (term "abc"))
   (test-->> flux-red (term ("hello, " "+" "world")) (term "hello, world"))
   (test-->> flux-red (term ("exists" "null")) (term #f))
@@ -225,12 +231,8 @@
   ;;           (term (("not" #t) "or" ("not" #t)))
   ;;           ))
 
-  ;; (test-->> flux-red (term (true "or" false)) (term true))
-  ;; (test-->> flux-red (term (1 ">" (2 "^" 2))) (term false))
-  ;; (test-->> flux-red (term (32 "!=" 31)) (term true))
-  ;; (test-->> flux-red (term (true "==" false)) (term false))
+
+  
 
   ;;
   )
-
-(provide flux-red)

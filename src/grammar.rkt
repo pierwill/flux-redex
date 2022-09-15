@@ -256,6 +256,7 @@
   (test-match Flux FloatLit (term (("0") ".")))
 
   (test-match Flux RecordLit (term ( "{" ((sup ":" 1)) "}" ) ))
+  (test-match Flux RecordLit (term ( "{" () "}" )))
   (test-match Flux Property (term (sup ":" 1)))
   (test-match Flux PropertyList '())
   (test-match Flux FunctionLit (term ("()" "=>" 1)))
@@ -305,12 +306,6 @@
 
   ;; FIXME bug
   (test-match Flux Expression (term (a "+" b) ))
-
-  ;; mv me to reduction
-  ;; TODO constraints. This should fail:
-  ;;     add = (a, b) => a + b
-  ;;     add(a: {}, b: {})
-  ;; See spec example.
   
   ;; 
   )
