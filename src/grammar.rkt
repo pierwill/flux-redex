@@ -211,71 +211,37 @@
 
 (module+ test
 
-  (test-match Flux Identifier
-              (term deadfeed))
-
-  ;; Packages
-  ;; --------
-  (test-match Flux PackageClause
-              (term ("package" foo)))
-
+  (test-match Flux Identifier (term deadfeed))
+  (test-match Flux PackageClause (term ("package" foo)))
   ;; TODO
-  ;; (test-match Flux File
-  ;;             (term ()))
+  ;; (test-match Flux File (term ()))
+  (test-match Flux Block (term 𝒰))
 
-  ;; Blocks
-  ;; ------
-  (test-match Flux Block
-              (term 𝒰))
-
-  ;; Statements
+  ;; STATEMENTS
   ;; ----------
-  (test-match Flux StatementList
-              (term ("return" foo)))
-
-  (test-match Flux VariableAssignment
-              (term (foo "=" 1)))
-
-  ;; function definition
-  ;; sup = () => 1
-  (test-match Flux VariableAssignment
-              (term (sup
-                     "="
-                     ( "()" "=>" 1))
-                    ))
-
-  ;; TODO
+  (test-match Flux StatementList (term ("return" foo)))
+  (test-match Flux VariableAssignment (term (foo "=" 1)))
+  ;; function definition `sup = () => 1`
+  (test-match Flux VariableAssignment (term (sup "=" ( "()" "=>" 1)) ))
   ;; add = (a, b) => a + b
   (test-match Flux VariableAssignment
               (term
                (; Identifier
                 add
                 "="
-                (; FunctionList
+                (; FunctionLit
                  ("(" (a b) ")") ; ParameterList
                  "=>"
-                 (a "+" b)                      ; FunctionBody
+                 (a "+" b) ; FunctionBody
                  )
                 )
                ))
 
-  (test-match Flux FunctionParameters
-              (term ("(" (foo) ")")
-                    ))
+  (test-match Flux FunctionParameters (term ("(" (foo) ")") ))
 
-  (test-match Flux BuiltinStatement
-              (term ("builtin" foo ":" "int")
-                    ))
-
-  (test-match Flux BuiltinStatement
-              (term ("builtin" foo ":" ("[" "int" "]"))
-                    ))
-
-  (test-match Flux BuiltinStatement
-              (term ("builtin" foo ":" ("["
-                                        "int"
-                                        "]"))
-                    ))
+  (test-match Flux BuiltinStatement (term ("builtin" foo ":" "int") ))
+  (test-match Flux BuiltinStatement (term ("builtin" foo ":" ("[" "int" "]")) ))
+  (test-match Flux BuiltinStatement (term ("builtin" foo ":" ("[" "int" "]")) ))
 
   ;; (r: T) => bool
   (define inner-func-type (term ("(" ((r ":" "T")) ")" "=>" "bool" )))
@@ -290,43 +256,22 @@
               (term ("builtin" filter ":" ("(" ,func-ty-params ")" "=>" ("[" "T" "]")))
                     ))
 
-  (test-match Flux TypeExpression
-              (term "time"))
+  (test-match Flux TypeExpression (term "time"))
+  (test-match Flux TypeExpression (term ("T" "where" (("T" ":" (fooo)))) ))
+  (test-match Flux Tvar (term "B"))
+  (test-match Flux Constraint (term ("T" ":" (fooo)) ))
 
-  (test-match Flux TypeExpression
-              (term ("T" "where" (("T" ":" (fooo))))
-                    ))
-
-  (test-match Flux Tvar
-              (term "B"))
-
-  (test-match Flux Constraint
-              (term ("T" ":" (fooo))
-                    ))
-
-  ;; Literals
+  ;; LITERALS
   ;; --------
   (test-match Flux decimals (term ("0")))
   (test-match Flux decimals (term ("0" "1")))
   (test-match Flux FloatLit (term (("0") ".")))
 
-  (test-match Flux RecordLit
-              (term (
-                     "{"
-                     ((sup ":" 1))
-                     "}"
-                     )
-                    ))
-
-  (test-match Flux Property
-              (term (sup ":" 1)))
-
-  (test-match Flux PropertyList
-              '())
-
-  (test-match Flux FunctionLit
-              (term ("()" "=>" 1)))
-
+  (test-match Flux RecordLit (term ( "{" ((sup ":" 1)) "}" ) ))
+  (test-match Flux Property (term (sup ":" 1)))
+  (test-match Flux PropertyList '())
+  (test-match Flux FunctionLit (term ("()" "=>" 1)))
+  
   (test-match Flux FunctionLit
               (term
                (
@@ -336,27 +281,12 @@
                 )
                ))
 
-  (test-match Flux FunctionParameters
-              (term ("(" (foo bar) ")")
-                    ))
-
-  (test-match Flux Parameter
-              (term sup))
-
-  (test-match Flux Parameter
-              (term (sup "=" 1)))
-
-  (test-match Flux ParameterList
-              (term ((sup "=" 1))
-                    ))
-
-  (test-match Flux ParameterList
-              (term (foo bar)
-                    ))
-
-  (test-match Flux ParameterList
-              (term ((foo "=" baz) (bar "=" true))
-                    ))
+  (test-match Flux FunctionParameters (term ("(" (foo bar) ")") ))
+  (test-match Flux Parameter (term sup))
+  (test-match Flux Parameter (term (sup "=" 1)))
+  (test-match Flux ParameterList (term ((sup "=" 1)) ))
+  (test-match Flux ParameterList (term (foo bar) ))
+  (test-match Flux ParameterList (term ((foo "=" baz) (bar "=" true)) ))
 
   ;; TIME
   ;; ----
@@ -365,7 +295,6 @@
   (define test_time (term (,eleven ":" ,eleven ":"  ,eleven)))
   (define test_time_weird (term (,eleven ":" ("8" "8") ":"  ,eleven)))
   (define test_frac_s (term ("." ("1"))))
-
   (test-match Flux date (term (,y2k "-" ,eleven "-" ,eleven)))
   (test-match Flux year y2k)
   (test-match Flux month eleven)
@@ -385,35 +314,21 @@
 
   ;; Expressions
   ;; -----------
-
-  (test-match Flux PrimaryExpression
-              (term (1 "w")))
-
-  (test-match Flux PrimaryExpression
-              (term
-               ("(" (1 "w") ")" )
-               ))
-
+  (test-match Flux PrimaryExpression (term (1 "w")))
+  (test-match Flux PrimaryExpression (term ("(" (1 "w") ")" ) ))
   (define proplist (term ((sup ":" 1))))
-  (test-match Flux CallExpression
-              (term ( "(" ,proplist ")" )))
+  (test-match Flux CallExpression (term ( "(" ,proplist ")" )))
+  (test-match Flux AdditiveExpression (term (a "+" b) ))
+  (test-match Flux ConditionalExpression (term ("if" a "then" b "else" c) ))
 
-  (test-match Flux AdditiveExpression
-              (term (a "+" b)
-                    ))
-
-  (test-match Flux ConditionalExpression
-              (term ("if" a "then" b "else" c)
-                    ))
   ;; FIXME bug
-  (test-match Flux Expression
-               (term (a "+" b)
-                     ))
+  (test-match Flux Expression (term (a "+" b) ))
 
+  ;; mv me to reduction
   ;; TODO constraints. This should fail:
   ;;     add = (a, b) => a + b
   ;;     add(a: {}, b: {})
   ;; See spec example.
-
+  
   ;; 
   )
