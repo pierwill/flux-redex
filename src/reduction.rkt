@@ -10,6 +10,9 @@
   (Store ::= ·
          ([VarName Val] ...))
 
+  (Expression ::= ....
+              #f #t)
+
   (VarName ::= Identifier)
   (Val ::= IntVal
        StringVal
@@ -222,7 +225,7 @@
   (test-->> flux-red (term ("if" #t "then" #f "else" #t)) (term #f))
 
   ;; FIXME () + ()
-  ;; (test-->> flux-red (term ((#t "and" #f) "and" (#t "and" #f))) (term #f))
+  (test-->> flux-red (term ((#t "and" #f) "and" (#t "and" #f))) (term #f))
   ;; (test-->> flux-red (term ((#t "or" #f) "or" (#t "or" #f))) (term #f))
 
   ;; de Morgan's laws
@@ -230,9 +233,6 @@
   ;;           (term ("not" (#t "or" #t)))
   ;;           (term (("not" #t) "or" ("not" #t)))
   ;;           ))
-
-
-  
 
   ;;
   )
