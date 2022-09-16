@@ -28,6 +28,8 @@
   (BoolVal ::= #f #t)
 
   (E ::= hole
+     (VarName "=" E)
+
      ("if" E "then" Expression_1 "else" Expression_2)
      ("if" Expression_1 "then" E "else" Expression_2)
      ("if" Expression_1 "then" Expression_2 "else" E)
@@ -184,6 +186,8 @@
   ;;           (term (,initial-store (sup "=" (1 "+" 1))))
   ;;           (term (([sup 2] [true #t] [false #f])))
   ;;           )
+
+  (test-->> flux-red (term (sup "=" (1 "+" (1 "+" 1)))) (term (sup "=" 3)))
 
   ;; expression evaluation
   (test-->> flux-red (term (4 "==" 2)) (term #f))
