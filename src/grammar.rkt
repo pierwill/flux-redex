@@ -111,7 +111,6 @@
   (month (decimalDigit decimalDigit))
   (day (decimalDigit decimalDigit))
   (time (hour ":" minute ":" second)
-        (hour ":" minute ":" second fractionalSecond)
         (hour ":" minute ":" second timeOffset)
         (hour ":" minute ":" second fractionalSecond timeOffset))
   (hour (decimalDigit decimalDigit))
