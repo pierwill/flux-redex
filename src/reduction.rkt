@@ -9,25 +9,23 @@
 
   (Store ::= ·
          ([VarName Val] ...))
+  (VarName ::= Identifier)
 
   (Expression ::= ....
-              #f #t)
+              BoolVal
+              (BoolVal "and" BoolVal)
+              (BoolVal "or" BoolVal)
+              ("not" BoolVal)
+              ("if" BoolVal "then" BoolVal "else" BoolVal))
 
-  (VarName ::= Identifier)
   (Val ::= IntVal
        StringVal
        BoolVal
-       "null"
-       )
+       "null")
 
   (IntVal ::= IntLit)
   (StringVal ::= StringLit)
-  (BoolVal ::=
-           ;; temporary hack
-           ;; define these in the Store for all programs
-           ;; (term #t)
-           ;; (term #f)
-           #f #t)
+  (BoolVal ::= #f #t)
 
   (E ::= hole
      ("if" E "then" Expression_1 "else" Expression_2)
@@ -234,5 +232,7 @@
   ;;           (term (("not" #t) "or" ("not" #t)))
   ;;           ))
 
+  (test-->> flux-red (term ((#t "or" #f) "or" (#t "or" #f))) (term #t))
+  (test-->> flux-red (term ("if" (#t "and" #t) "then" #f "else" #t)) (term #f))
   ;;
   )
