@@ -29,6 +29,8 @@
 
   (E ::= hole
      ("if" E "then" Expression_1 "else" Expression_2)
+     ("if" Expression_1 "then" E "else" Expression_2)
+     ("if" Expression_1 "then" Expression_2 "else" E)
      (E "=" Expression)
      (Val "=" E)
      (E "+" Expression)
@@ -221,18 +223,10 @@
   (test-->> flux-red (term ("not" ("not" #f))) (term #f))
   (test-->> flux-red (term ("not" ("not" ("not" ("not" #f))))) (term #f))
   (test-->> flux-red (term ("if" #t "then" #f "else" #t)) (term #f))
-
-  ;; FIXME () + ()
   (test-->> flux-red (term ((#t "and" #f) "and" (#t "and" #f))) (term #f))
-  ;; (test-->> flux-red (term ((#t "or" #f) "or" (#t "or" #f))) (term #f))
-
-  ;; de Morgan's laws
-  ;; (test-->> flux-red
-  ;;           (term ("not" (#t "or" #t)))
-  ;;           (term (("not" #t) "or" ("not" #t)))
-  ;;           ))
-
   (test-->> flux-red (term ((#t "or" #f) "or" (#t "or" #f))) (term #t))
   (test-->> flux-red (term ("if" (#t "and" #t) "then" #f "else" #t)) (term #f))
+  (test-->> flux-red (term ("if" (#t "or" #f) "then" #f "else" #t)) (term #f))
+  (test-->> flux-red (term ("if" #t "then" (1 "+" 1) "else" #t)) (term 2))
   ;;
   )
