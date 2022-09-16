@@ -38,11 +38,12 @@
 
   (BuiltinStatement ("builtin" Identifier ":" TypeExpression))
   (TypeExpression MonoType (MonoType "where" Constraints))
-  (MonoType Tvar BasicType ArrayType RecordType FunctionType)
+  (MonoType Tvar BasicType ArrayType StreamType VectorType RecordType FunctionType)
   (Tvar "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
   (BasicType "int" "uint" "float" "string" "bool" "time" "duration") ; TODO "bytes" and "regex"
-  (ArrayType ("stream" "[" MonoType "]")
-             ("vector" "[" MonoType "]"))
+  (ArrayType ("[" MonoType "]"))
+  (StreamType ("stream" "[" MonoType "]"))
+  (VectorType ("vector" "[" MonoType "]"))
   (RecordType ("{" "}")
               ("{" RecordTypeProperties "}")
               ("{" Tvar "with" RecordTypeProperties "}"))
