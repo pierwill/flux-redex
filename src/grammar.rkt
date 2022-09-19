@@ -254,6 +254,10 @@
   (test-match Flux decimals (term ("0" "1")))
   (test-match Flux FloatLit (term (("0") ".")))
 
+  (test-match Flux ArrayLit (term ("[" (1) "]")))
+  (test-match Flux ArrayLit (term ("[" (1 2 3) "]")))
+  ;; FIXME this needs to error somewhere
+  (test-match Flux ArrayLit (term ("[" (1 2 "sup") "]")))
   (test-match Flux RecordLit (term ( "{" ((sup ":" 1)) "}" ) ))
   (test-match Flux RecordLit (term ( "{" () "}" )))
   (test-match Flux Property (term (sup ":" 1)))
