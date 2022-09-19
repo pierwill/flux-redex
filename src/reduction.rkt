@@ -29,6 +29,9 @@
   (E ::= hole
      (VarName "=" E)
 
+     ("[" E ":" Expression "]") ; dictionary
+     ("[" Val ":" E "]")
+
      ("if" E "then" Expression_1 "else" Expression_2)
      ("if" Expression_1 "then" E "else" Expression_2)
      ("if" Expression_1 "then" Expression_2 "else" E)
@@ -231,5 +234,10 @@
   (test-->> flux-red (term ("if" (#t "or" #f) "then" #f "else" #t)) (term #f))
   (test-->> flux-red (term ("if" #t "then" (1 "+" 1) "else" #t)) (term 2))
   (test-->> flux-red (term ("if" #f "then" (1 "+" 1) "else" ((1 "+" 2) "-" 1))) (term 2))
+
+  (define dict (term ("[" "hello" ":" 2 "]")))
+  (test-->> flux-red (term ("[" "hello" ":" (1 "+" 1) "]")) dict)
+  (test-->> flux-red (term ("[" ("hel" "+" "lo") ":" (1 "+" 1) "]")) dict)
+
   ;;
   )
