@@ -7,10 +7,6 @@
 
 (define-extended-language Flux-eval Flux
 
-  (Store ::= ·
-         ([VarName Val] ...))
-  (VarName ::= Identifier)
-
   (Expression ::= ....
               BoolVal
               (BoolVal "and" BoolVal)
@@ -22,10 +18,13 @@
        StringVal
        BoolVal
        "null")
-
   (IntVal ::= IntLit)
   (StringVal ::= StringLit)
   (BoolVal ::= #f #t)
+
+  (Store ::= ·
+         ([VarName Val] ...))
+  (VarName ::= Identifier)
 
   (E ::= hole
      (VarName "=" E)
