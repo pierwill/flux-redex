@@ -72,7 +72,6 @@
         (where [(VarName_1 Val_1) ...] Store_1)
         (where Store_2 [(VarName Val) (VarName_1 Val_1) ...]))
 
-   ;; TODO
    (--> (in-hole E ("if" Val_1 "then" Val_2 "else" Val_3))
         (in-hole E ,(if (term Val_1) (term Val_2) (term Val_3)))
         "if-then-else")
@@ -232,5 +231,6 @@
   (test-->> flux-red (term ("if" (#t "and" #t) "then" #f "else" #t)) (term #f))
   (test-->> flux-red (term ("if" (#t "or" #f) "then" #f "else" #t)) (term #f))
   (test-->> flux-red (term ("if" #t "then" (1 "+" 1) "else" #t)) (term 2))
+  (test-->> flux-red (term ("if" #f "then" (1 "+" 1) "else" ((1 "+" 2) "-" 1))) (term 2))
   ;;
   )
