@@ -94,7 +94,7 @@
 
   (FloatLit (decimals ".") (decimals "." decimals) ("." decimals))
   (decimals (decimalDigit decimalDigit ...))
-  
+
   (StringLit string)
 
   ;; TODO maybe?
@@ -132,7 +132,7 @@
 
   (DictLit EmptyDict ("[" AssociativeList "]"))
   (EmptyDict ("[" ":" "]"))
-  (AssociativeList (Association AssociativeList ...))
+  (AssociativeList (Association ...)) ; TODO something fishy...
   (Association (Expression ":" Expression))
 
   (FunctionLit (FunctionParameters "=>" FunctionBody))
@@ -254,6 +254,13 @@
   (test-match Flux decimals (term ("0" "1")))
   (test-match Flux FloatLit (term (("0") ".")))
 
+  ;; (test-match Flux DictLit (term ("[" (["foo" ":" 1]) "]")))
+  (define assoc (term ("foo" ":" 1)))
+  (test-match Flux Association assoc)
+  (define assoc-list (term (["foo" ":" 1] ["bar" ":" 2]))) ; ???
+  (test-match Flux AssociativeList assoc-list)
+  (test-match Flux DictLit (term ("[" ,assoc-list "]")))
+
   (test-match Flux ArrayLit (term ("[" (1) "]")))
   (test-match Flux ArrayLit (term ("[" (1 2 3) "]")))
   ;; FIXME this needs to error somewhere
@@ -309,6 +316,6 @@
 
   ;; FIXME bug
   (test-match Flux Expression (term (a "+" b) ))
-  
-  ;; 
+
+  ;;
   )
