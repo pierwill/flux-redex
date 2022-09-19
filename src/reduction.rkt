@@ -28,15 +28,18 @@
 
   (E ::= hole
      (VarName "=" E)
+     (E "=" Expression)
+     (Val "=" E)
 
      ("[" E ":" Expression "]") ; dictionary
      ("[" Val ":" E "]")
+     ("[" (Expression ... E Expression ...) "]") ; array
+     ("[" (Val E) "]")
 
      ("if" E "then" Expression_1 "else" Expression_2)
      ("if" Expression_1 "then" E "else" Expression_2)
      ("if" Expression_1 "then" Expression_2 "else" E)
-     (E "=" Expression)
-     (Val "=" E)
+
      (E "+" Expression)
      (Val "+" E)
      (E "-" Expression)
@@ -239,5 +242,10 @@
   (test-->> flux-red (term ("[" "hello" ":" (1 "+" 1) "]")) dict)
   (test-->> flux-red (term ("[" ("hel" "+" "lo") ":" (1 "+" 1) "]")) dict)
 
+  (define arrlit (term ("[" (1 2 3 4) "]")))
+  (test-match Flux-eval ArrayLit arrlit)
+  (test-->> flux-red (term ("[" ((0 "+" 1) 2 3 4) "]")) arrlit)
+  (test-->> flux-red (term ("[" (1 (1 "+" 1) 3 4) "]")) arrlit)
+  (test-->> flux-red (term ("[" ((2 "-" 1) (1 "+" 1) 3 4) "]")) arrlit)
   ;;
   )
