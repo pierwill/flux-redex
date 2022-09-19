@@ -185,11 +185,9 @@
   (define store-after-assign (term (([sup 1] [true #t] [false #f]))))
   (test-->> flux-red (term [,initial-store (sup "=" 1)]) (term ,store-after-assign))
 
-  ;; TODO
-  ;; (test-->> flux-red
-  ;;           (term (,initial-store (sup "=" (1 "+" 1))))
-  ;;           (term (([sup 2] [true #t] [false #f])))
-  ;;           )
+  ;; (define varassign (term (,initial-store (sup "=" (1 "+" 1)))))
+  ;; (define result (term (([sup 2] [true #t] [false #f]))))
+  ;; (test-->> flux-red varassign result)
 
   (test-->> flux-red (term (sup "=" (1 "+" (1 "+" 1)))) (term (sup "=" 3)))
 
