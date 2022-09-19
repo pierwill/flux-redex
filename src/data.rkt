@@ -3,6 +3,7 @@
          "reduction.rkt")
 
 (define-extended-language Flux-data Flux-eval
+
   ;; A stream of tables is a collection of zero or more tables.
   ;; Data sources return results as a stream of tables.
   (StreamOfTables ::= (Table ...))
@@ -14,22 +15,27 @@
   ;; A row is a collection of associated column values.
   (Row ::= (Val ...))
 
-  ;; A group key defines which columns and specific column values to include
-  ;; in a table. All rows in a table contain the same values in group key columns.
-  ;; All tables in a stream of tables have a unique group key, but group key
-  ;; modifications are applied to a stream of tables.
-  ;; (GroupKey ::=
+  ;; Group key
+  ;;
+  ;; A group key defines which columns and specific column values to include in a table.
+  ;; All rows in a table contain the same values in group key columns.
+  ;; All tables in a stream of tables have a unique group key, but group key modifications are applied to a stream of tables.
+  ;;
+  ;; Example group keys
+  ;;
+  ;; Group keys contain key-value pairs,
+  ;; where each key represents a column name and each value represents the column value included in the table.
+  ;; The following are examples of group keys in a stream of tables with three separate tables.
+  ;; Each group key represents a table containing data for a unique location:
+  ;;
+  ;; [_measurement: "production", facility: "us-midwest", _field: "apq"]
+  ;; [_measurement: "production", facility: "eu-central", _field: "apq"]
+  ;; [_measurement: "production", facility: "ap-east", _field: "apq"]
+  (GroupKey ::= ((Identifier Column) ...))
 
-  (ColumnType ::=
-              "bool"     ;; a boolean value, true or false.
-              "uint"     ;; an unsigned 64-bit integer
-              "int"      ;; a signed 64-bit integer
-              "float"    ;; an IEEE-754 64-bit floating-point number
-              "string"   ;; a sequence of unicode characters
-              "bytes"    ;; a sequence of byte values
-              "time"     ;; a nanosecond precision instant in time
-              "duration" ;; a nanosecond precision duration of time
-              )
+  (ColumnType ::= "bool" "uint" "int" "float" "string" "bytes" "time" "duration" )
+
+  ;;
   )
 
 (test-match Flux-data Row (term (#t)))
