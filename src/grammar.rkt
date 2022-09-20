@@ -38,10 +38,12 @@
 
   (BuiltinStatement ("builtin" Identifier ":" TypeExpression))
   (TypeExpression MonoType (MonoType "where" Constraints))
-  (MonoType Tvar BasicType ArrayType RecordType FunctionType)
+  (MonoType Tvar BasicType ArrayType StreamType VectorType RecordType FunctionType)
   (Tvar "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
   (BasicType "int" "uint" "float" "string" "bool" "time" "duration") ; TODO "bytes" and "regex"
   (ArrayType ("[" MonoType "]"))
+  (StreamType ("stream" "[" MonoType "]"))
+  (VectorType ("vector" "[" MonoType "]"))
   (RecordType ("{" "}")
               ("{" RecordTypeProperties "}")
               ("{" Tvar "with" RecordTypeProperties "}"))
@@ -229,21 +231,21 @@
 
   (test-match Flux FunctionParameters (term ("(" (foo) ")")))
 
-  (define array-int (term ("[" "int" "]")))
-  (test-match Flux BuiltinStatement (term ("builtin" foo ":" "int")))
-  (test-match Flux BuiltinStatement (term ("builtin" foo ":" ,array-int)))
-  (test-match Flux BuiltinStatement (term ("builtin" foo ":" ,array-int)))
+  (define array-int (term ("vector" "[" "int" "]")))
+  (test-match Flux BuiltinStatement (term ("builtin" foo ":" "int") ))
+  (test-match Flux BuiltinStatement (term ("builtin" foo ":" ,array-int) ))
+  (test-match Flux BuiltinStatement (term ("builtin" foo ":" ,array-int) ))
 
   ;; (r: T) => bool
   (define inner-func-type (term ("(" ((r ":" "T")) ")" "=>" "bool")))
   (test-match Flux FunctionType inner-func-type)
   ;; (<-tables: [T], fn: (r: T) => bool)
-  (define func-ty-params (term (("<-" tables ":" "T") (fn ":" ,inner-func-type))))
+  (define stream-array-t (term ("stream" "[" "T" "]")))
+  (define func-ty-params (term (("<-" tables ":" ,stream-array-t) (fn ":" ,inner-func-type))))
   (test-match Flux FunctionTypeParameters func-ty-params)
-  (define array-t (term ("[" "T" "]")))
   ;; TODO `stream[T]`? See https://github.com/influxdata/flux/pull/5206
   ;; builtin filter : (<-tables: [T], fn: (r: T) => bool) => [T]
-  (test-match Flux BuiltinStatement (term ("builtin" filter ":" ("(" ,func-ty-params ")" "=>" ,array-t))))
+  (test-match Flux BuiltinStatement (term ("builtin" filter ":" ("(" ,func-ty-params ")" "=>" ,stream-array-t))))
 
   (test-match Flux TypeExpression (term "time"))
   (test-match Flux TypeExpression (term ("T" "where" (("T" ":" (fooo))))))
@@ -287,8 +289,8 @@
   ;; ----
   (define eleven (term ("1" "1")))
   (define y2k (term ("2" "0" "0" "0")))
-  (define test_time (term (,eleven ":" ,eleven ":"  ,eleven)))
-  (define test_time_weird (term (,eleven ":" ("8" "8") ":"  ,eleven)))
+  (define test_time (term (,eleven ":" ,eleven ":"  ,eleven "Z")))
+  (define test_time_weird (term (,eleven ":" ("8" "8") ":"  ,eleven "Z")))
   (define test_frac_s (term ("." ("1"))))
   (test-match Flux date (term (,y2k "-" ,eleven "-" ,eleven)))
   (test-match Flux year y2k)
