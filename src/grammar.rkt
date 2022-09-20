@@ -214,6 +214,10 @@
   (test-match Flux PackageClause (term ("package" foo)))
   ;; TODO
   ;; (test-match Flux File (term ()))
+  (test-match Flux Statement (term (x "=" 1)))
+  (define st-list (term ((x "=" 1) x)))
+  (test-match Flux StatementList st-list)
+  (test-match Flux File (term (st-list)))
   (test-match Flux Block (term 𝒰))
 
   ;; STATEMENTS
