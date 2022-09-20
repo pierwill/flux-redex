@@ -7,10 +7,6 @@
 
 (define-extended-language Flux-eval Flux
 
-  (Store ::= ·
-         ([VarName Val] ...))
-  (VarName ::= Identifier)
-
   (Expression ::= ....
               BoolVal
               (BoolVal "and" BoolVal)
@@ -22,19 +18,28 @@
        StringVal
        BoolVal
        "null")
-
   (IntVal ::= IntLit)
   (StringVal ::= StringLit)
   (BoolVal ::= #f #t)
 
+  (Store ::= ·
+         ([VarName Val] ...))
+  (VarName ::= Identifier)
+
   (E ::= hole
      (VarName "=" E)
+     (E "=" Expression)
+     (Val "=" E)
+
+     ("[" E ":" Expression "]") ; dictionary
+     ("[" Val ":" E "]")
+     ("[" (Expression ... E Expression ...) "]") ; array
+     ("[" (Val E) "]")
 
      ("if" E "then" Expression_1 "else" Expression_2)
      ("if" Expression_1 "then" E "else" Expression_2)
      ("if" Expression_1 "then" Expression_2 "else" E)
-     (E "=" Expression)
-     (Val "=" E)
+
      (E "+" Expression)
      (Val "+" E)
      (E "-" Expression)
@@ -72,7 +77,6 @@
         (where [(VarName_1 Val_1) ...] Store_1)
         (where Store_2 [(VarName Val) (VarName_1 Val_1) ...]))
 
-   ;; TODO
    (--> (in-hole E ("if" Val_1 "then" Val_2 "else" Val_3))
         (in-hole E ,(if (term Val_1) (term Val_2) (term Val_3)))
         "if-then-else")
@@ -181,11 +185,9 @@
   (define store-after-assign (term (([sup 1] [true #t] [false #f]))))
   (test-->> flux-red (term [,initial-store (sup "=" 1)]) (term ,store-after-assign))
 
-  ;; TODO
-  ;; (test-->> flux-red
-  ;;           (term (,initial-store (sup "=" (1 "+" 1))))
-  ;;           (term (([sup 2] [true #t] [false #f])))
-  ;;           )
+  ;; (define varassign (term (,initial-store (sup "=" (1 "+" 1)))))
+  ;; (define result (term (([sup 2] [true #t] [false #f]))))
+  ;; (test-->> flux-red varassign result)
 
   (test-->> flux-red (term (sup "=" (1 "+" (1 "+" 1)))) (term (sup "=" 3)))
 
@@ -232,5 +234,16 @@
   (test-->> flux-red (term ("if" (#t "and" #t) "then" #f "else" #t)) (term #f))
   (test-->> flux-red (term ("if" (#t "or" #f) "then" #f "else" #t)) (term #f))
   (test-->> flux-red (term ("if" #t "then" (1 "+" 1) "else" #t)) (term 2))
+  (test-->> flux-red (term ("if" #f "then" (1 "+" 1) "else" ((1 "+" 2) "-" 1))) (term 2))
+
+  (define dict (term ("[" "hello" ":" 2 "]")))
+  (test-->> flux-red (term ("[" "hello" ":" (1 "+" 1) "]")) dict)
+  (test-->> flux-red (term ("[" ("hel" "+" "lo") ":" (1 "+" 1) "]")) dict)
+
+  (define arrlit (term ("[" (1 2 3 4) "]")))
+  (test-match Flux-eval ArrayLit arrlit)
+  (test-->> flux-red (term ("[" ((0 "+" 1) 2 3 4) "]")) arrlit)
+  (test-->> flux-red (term ("[" (1 (1 "+" 1) 3 4) "]")) arrlit)
+  (test-->> flux-red (term ("[" ((2 "-" 1) (1 "+" 1) 3 4) "]")) arrlit)
   ;;
   )
