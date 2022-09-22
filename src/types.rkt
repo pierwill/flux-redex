@@ -80,6 +80,13 @@
    (has-type Gamma_0 ("if" Expression_1 "then" Expression_2 "else" Expression_3) Type Gamma_3)
    ]
 
+  [
+   (has-type Gamma_0 Expression_1 Type Gamma_1)
+   (has-type Gamma_1 Expression_2 Type Gamma_2)
+   ------------------------------- "array2"
+   (has-type Gamma_0 ("[" (Expression_1 Expression_2) "]") Array Gamma_2)
+   ]
+
   ;;
   )
 
@@ -132,6 +139,14 @@
                         (() () ([true Bool] [false Bool])) ; Gamma_in
                         "null"
                         Null
+
+                        (() () ([true Bool] [false Bool]))) ; Gamma_out
+                       )
+
+  (test-judgment-holds (has-type
+                        (() () ([true Bool] [false Bool])) ; Gamma_in
+                        ("[" ("foo" "bar") "]")
+                        Array
 
                         (() () ([true Bool] [false Bool]))) ; Gamma_out
                        )
