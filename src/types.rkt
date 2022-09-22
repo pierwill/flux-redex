@@ -193,6 +193,16 @@
                         (() () ())) ; Gamma_out
                        )
 
+  ;; FIXME? this shouldn't work, I don't think...
+  (test-judgment-holds (has-type
+                        (() () ()) ; Gamma_in
+                        ("[" ("foo" "null") "]")
+                        Array
+
+                        (() () ())) ; Gamma_out
+                       )
+  
+
   ;; (test-judgment-holds (has-type
   ;;                       (() () ()) ; Gamma_in
   ;;                       ("foo" "<" "bar") ; we can compare strings by lexicographic
