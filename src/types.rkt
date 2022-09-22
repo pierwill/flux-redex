@@ -1,6 +1,5 @@
 #lang racket
 (require redex
-         ;; "grammar.rkt"
          "reduction.rkt")
 
 (define-extended-language Flux-ty Flux-eval
@@ -11,7 +10,7 @@
               [(VarName Type) ...]))
 
   (Type ::= TypeVar
-        "null"
+        Null
         Bool
         Uint
         Int
@@ -23,8 +22,7 @@
         Record
         Dictionary
         Function
-        Generator
-        )
+        Generator)
   (TypeVar ::= Identifier)
   ;;
   )
@@ -58,6 +56,24 @@
 
   [
    (has-type Gamma_0 Expression_1 Bool Gamma_1)
+   (has-type Gamma_1 Expression_2 Bool Gamma_2)
+   -------------------------------------------- "or"
+   (has-type Gamma_0 (Expression_1 "or" Expression_2) Bool Gamma_2)
+   ]
+
+  [
+   (has-type Gamma_0 Expression Bool Gamma_1)
+   -------------------------------------------- "not"
+   (has-type Gamma_0 ("not" Expression) Bool Gamma_1)
+   ]
+
+  [
+   -------------------------------------------- "null"
+   (has-type Gamma "null" Null Gamma)
+   ]
+
+  [
+   (has-type Gamma_0 Expression_1 Bool Gamma_1)
    (has-type Gamma_1 Expression_2 Type Gamma_2)
    (has-type Gamma_2 Expression_3 Type Gamma_3) ; they have to have same type, otherwise we're not doing algo W
    ------------------------------- "ifthenelse"
@@ -69,8 +85,8 @@
 
 (module+ test
 
-  (test-judgment-holds (has-type (() () ()) (("1" "1") ".") Float (() () ())))
   (test-judgment-holds (has-type (() () ()) "αδελφός" String (() () ())))
+  (test-judgment-holds (has-type (() () ()) (("1" "1") ".") Float (() () ())))
 
   (test-judgment-holds (has-type
                         (() () ([true Bool] [false Bool])) ; Gamma_in
@@ -90,8 +106,32 @@
 
   (test-judgment-holds (has-type
                         (() () ([true Bool] [false Bool])) ; Gamma_in
+                        (true "or" false)
+                        Bool
+
+                        (() () ([true Bool] [false Bool]))) ; Gamma_out
+                       )
+
+  (test-judgment-holds (has-type
+                        (() () ([true Bool] [false Bool])) ; Gamma_in
+                        ("not" false)
+                        Bool
+
+                        (() () ([true Bool] [false Bool]))) ; Gamma_out
+                       )
+
+  (test-judgment-holds (has-type
+                        (() () ([true Bool] [false Bool])) ; Gamma_in
                         ("if" true "then" "foo" "else" "bar")
                         String
+
+                        (() () ([true Bool] [false Bool]))) ; Gamma_out
+                       )
+
+  (test-judgment-holds (has-type
+                        (() () ([true Bool] [false Bool])) ; Gamma_in
+                        "null"
+                        Null
 
                         (() () ([true Bool] [false Bool]))) ; Gamma_out
                        )
