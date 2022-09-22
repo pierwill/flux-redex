@@ -5,15 +5,12 @@
 
 (define-extended-language Flux-ty Flux-eval
 
-  (TypeVar ::= Identifier)
-
-  ;; when you have an unknown type, make a fresh type, put it in gamma
+  ;; Gamma is a type environment.
   (Gamma ::= ((TypeVar ...)
               [(TypeVar Type) ...]
               [(VarName Type) ...]))
 
   (Type ::= TypeVar
-        
         "null"
         Bool
         Uint
@@ -28,6 +25,7 @@
         Function
         Generator
         )
+  (TypeVar ::= Identifier)
   ;;
   )
 
@@ -67,12 +65,19 @@
   (test-judgment-holds (has-type (() () ()) (("1" "1") ".") Float (() () ())))
   (test-judgment-holds (has-type (() () ()) "αδελφός" String (() () ())))
 
+  (test-judgment-holds (has-type
+                        (() () ([true Bool] [false Bool])) ; Gamma_in
+                        true
+                        Bool
+
+                        (() () ([true Bool] [false Bool])))) ; Gamma_out
+
   ;; (test-judgment-holds (has-type
   ;;                       (() () ([true #t] [false #f]))
   ;;                       (term ("if" true "then" false "else" true))
   ;;                       Bool
 
   ;;                       (() () ())))
-  
+
   ;;
   )
