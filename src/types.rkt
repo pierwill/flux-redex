@@ -92,6 +92,27 @@
    (has-type Gamma_0 ("[" (Expression_1 Expression_2) "]") Array Gamma_2)
    ]
 
+  ;; [
+  ;;  (has-type Gamma_0 Expression_1 Type Gamma_1)
+  ;;  (has-type Gamma_1 Expression_2 Type Gamma_2)
+  ;;  ------------------------------- "comparison"
+  ;;  (has-type Gamma_0 (Expression_1 ComparisonOperator Expression_2) Bool Gamma_2)
+  ;;  ]
+
+  ;; TODO Variable assignments should insert into Gamma, yes?
+
+  ;; These involve numeric types:
+  ;; TODO ComparisonExpression
+  ;; TODO AdditiveExpression
+  ;; TODO MultiplicativeExpression
+  ;; TODO ExponentExpression
+
+  ;; TODO PipeExpression
+
+  ;; TODO UnaryExpression (prefix operators for durations?)
+
+  ;; PostfixExpression
+
   ;;
   )
 
@@ -171,6 +192,14 @@
 
                         (() () ())) ; Gamma_out
                        )
+
+  ;; (test-judgment-holds (has-type
+  ;;                       (() () ()) ; Gamma_in
+  ;;                       ("foo" "<" "bar") ; we can compare strings by lexicographic
+  ;;                       Bool
+
+  ;;                       (() () ())) ; Gamma_out
+  ;;                      )
 
   ;;
   )
