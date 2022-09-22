@@ -3,7 +3,8 @@
          "grammar.rkt"
          )
 
-(provide flux-red)
+(provide flux-red
+         Flux-eval)
 
 (define-extended-language Flux-eval Flux
 
