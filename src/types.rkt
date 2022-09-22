@@ -87,5 +87,14 @@
 
                         (() () ([true Bool] [false Bool]))) ; Gamma_out
                        )
+
+  (test-judgment-holds (has-type
+                        (() () ([true Bool] [false Bool])) ; Gamma_in
+                        ("if" true "then" "foo" "else" "bar")
+                        String
+
+                        (() () ([true Bool] [false Bool]))) ; Gamma_out
+                       )
+
   ;;
   )
