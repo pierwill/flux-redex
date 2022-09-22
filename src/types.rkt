@@ -73,6 +73,11 @@
    ]
 
   [
+   -------------------------------------------- "exists"
+   (has-type Gamma ("exists" Expression) Bool Gamma)
+   ]
+
+  [
    (has-type Gamma_0 Expression_1 Bool Gamma_1)
    (has-type Gamma_1 Expression_2 Type Gamma_2)
    (has-type Gamma_2 Expression_3 Type Gamma_3) ; they have to have same type, otherwise we're not doing algo W
@@ -144,11 +149,27 @@
                        )
 
   (test-judgment-holds (has-type
+                        (() () ()) ; Gamma_in
+                        ("exists" "null")
+                        Bool
+
+                        (() () ())) ; Gamma_out
+                       )
+
+  (test-judgment-holds (has-type
                         (() () ([true Bool] [false Bool])) ; Gamma_in
+                        ("exists" true)
+                        Bool
+
+                        (() () ([true Bool] [false Bool]))) ; Gamma_out
+                       )
+
+  (test-judgment-holds (has-type
+                        (() () ()) ; Gamma_in
                         ("[" ("foo" "bar") "]")
                         Array
 
-                        (() () ([true Bool] [false Bool]))) ; Gamma_out
+                        (() () ())) ; Gamma_out
                        )
 
   ;;
