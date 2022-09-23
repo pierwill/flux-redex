@@ -33,62 +33,64 @@
 
   [
    (where (_ _ [_ ... (VarName Type) _ ...]) Gamma)
-   -------------------------
+   ------------------------------------------------ "var"
    (has-type Gamma VarName Type Gamma)
    ]
 
   [
-   ---------------------- "string"
+   --------------------------------------- "string"
    (has-type Gamma StringLit String Gamma)
    ]
 
   [
-   ---------------------- "float"
+   ------------------------------------- "float"
    (has-type Gamma FloatLit Float Gamma)
    ]
 
   [
    (has-type Gamma_0 Expression_1 Bool Gamma_1)
    (has-type Gamma_1 Expression_2 Bool Gamma_2)
-   -------------------------------------------- "and"
+   ----------------------------------------------------------------- "and"
    (has-type Gamma_0 (Expression_1 "and" Expression_2) Bool Gamma_2)
    ]
 
   [
    (has-type Gamma_0 Expression_1 Bool Gamma_1)
    (has-type Gamma_1 Expression_2 Bool Gamma_2)
-   -------------------------------------------- "or"
+   ---------------------------------------------------------------- "or"
    (has-type Gamma_0 (Expression_1 "or" Expression_2) Bool Gamma_2)
    ]
 
   [
    (has-type Gamma_0 Expression Bool Gamma_1)
-   -------------------------------------------- "not"
+   -------------------------------------------------- "not"
    (has-type Gamma_0 ("not" Expression) Bool Gamma_1)
    ]
 
   [
-   -------------------------------------------- "null"
+   ---------------------------------- "null"
    (has-type Gamma "null" Null Gamma)
    ]
 
   [
-   -------------------------------------------- "exists"
+   ------------------------------------------------- "exists"
    (has-type Gamma ("exists" Expression) Bool Gamma)
    ]
 
   [
    (has-type Gamma_0 Expression_1 Bool Gamma_1)
    (has-type Gamma_1 Expression_2 Type Gamma_2)
-   (has-type Gamma_2 Expression_3 Type Gamma_3) ; they have to have same type, otherwise we're not doing algo W
-   ------------------------------- "ifthenelse"
-   (has-type Gamma_0 ("if" Expression_1 "then" Expression_2 "else" Expression_3) Type Gamma_3)
+   (has-type Gamma_2 Expression_3 Type Gamma_3)
+   -------------------------------------------- "ifthenelse"
+   (has-type Gamma_0
+             ("if" Expression_1 "then" Expression_2 "else" Expression_3)
+             Type Gamma_3)
    ]
 
   [
    (has-type Gamma_0 Expression_1 Type Gamma_1)
    (has-type Gamma_1 Expression_2 Type Gamma_2)
-   ------------------------------- "array2"
+   -------------------------------------------- "array2"
    (has-type Gamma_0 ("[" (Expression_1 Expression_2) "]") Array Gamma_2)
    ]
 
@@ -201,7 +203,6 @@
 
                         (() () ())) ; Gamma_out
                        )
-  
 
   ;; (test-judgment-holds (has-type
   ;;                       (() () ()) ; Gamma_in
