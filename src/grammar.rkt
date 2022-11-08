@@ -7,15 +7,26 @@
 
   ;; Packages
   ;; --------
-  (PackageClause ("package" Identifier))
+  (PackageClause ("package" Identifier)
+                 (Attributes "package" Identifier))
   (File StatementList
         (PackageClause StatementList)
         (ImportList StatementList)
         (PackageClause ImportList StatementList))
   (ImportList (ImportDeclaration ...))
   (ImportDeclaration ("import" StringLit)
-                     ("import" Identifier StringLit))
+                     ("import" Identifier StringLit)
+                     (Attributes "import" StringLit)
+                     (Attributes "import" Identifier StringLit))
 
+  (Attributes (Attribute ...))
+  (Attribute ("@" Identifier AttributeParameters))
+  (AttributeParameters EmptyAttributeParameterList
+                       ( "(" (AttributeParameterList ...) ")" ))
+  (EmptyAttributeParameterList ( "(" ")" ))
+  (AttributeParameterList (AttributeParameter ...))
+  (AttributeParameter PrimaryExpression)
+  
   ;; Blocks
   ;; ------
   (Block 𝒰
@@ -220,6 +231,9 @@
   (test-match Flux File (term (st-list)))
   (test-match Flux Block (term 𝒰))
 
+  (test-match Flux Attribute (term ("@" sup ( "(" ")" ))))
+
+  
   ;; STATEMENTS
   ;; ----------
   (test-match Flux StatementList (term ("return" foo)))
