@@ -19,11 +19,9 @@
                      (Attributes "import" StringLit)
                      (Attributes "import" Identifier StringLit))
 
-  (Attributes (Attribute ...))
+  (Attributes '() (Attribute ...))
   (Attribute ("@" Identifier AttributeParameters))
-  (AttributeParameters EmptyAttributeParameterList
-                       ( "(" (AttributeParameterList ...) ")" ))
-  (EmptyAttributeParameterList ( "(" ")" ))
+  (AttributeParameters '() ( "(" AttributeParameterList ")" ))
   (AttributeParameterList (AttributeParameter ...))
   (AttributeParameter PrimaryExpression)
   
@@ -231,8 +229,13 @@
   (test-match Flux File (term (st-list)))
   (test-match Flux Block (term 𝒰))
 
-  (test-match Flux Attribute (term ("@" sup ( "(" ")" ))))
-
+  (define attr-param (term ("(" "2022.1" ")")))
+  (test-match Flux AttributeParameter attr-param)
+  (test-match Flux AttributeParameterList attr-param)
+  (test-match Flux AttributeParameterList (term (,attr-param ,attr-param)))
+  (define attr-params (term ( "(" (attr-param) ")")))
+  (test-match Flux AttributeParameters attr-params)
+  (test-match Flux Attribute (term ("@" edition ,attr-params)))
   
   ;; STATEMENTS
   ;; ----------
